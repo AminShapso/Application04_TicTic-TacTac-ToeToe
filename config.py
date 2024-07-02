@@ -1,4 +1,5 @@
 import random
+import os
 from random import uniform
 
 
@@ -10,9 +11,11 @@ num_players_spinner_values = ['vs. Python', '2', '3', '4', '5', '6']
 
 
 # Globals
+dir_path = os.path.dirname(__file__)
+assets_path = os.path.join(dir_path, 'assets')
+global_font = os.path.join(assets_path, 'arial.ttf')
 player_symbols = ['X', 'O', '□', 'Δ', '◊', '*']
 list_of_colors = None
-global_font = 'arial'
 player_sounds = [f'assets/Audio - Player Sound {i:02}.wav' for i in range(1, 14)]
 
 
