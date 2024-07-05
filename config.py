@@ -14,6 +14,7 @@ num_players_spinner_values = ['vs. Python', '2', '3', '4', '5', '6']
 dir_path = os.path.dirname(__file__)
 assets_path = os.path.join(dir_path, 'assets')
 global_font = os.path.join(assets_path, 'arial.ttf')
+widget_height = 80
 player_symbols = ['X', 'O', '□', 'Δ', '◊', '*']
 list_of_colors = None
 player_sounds = [f'assets/Audio - Player Sound {i:02}.wav' for i in range(1, 14)]

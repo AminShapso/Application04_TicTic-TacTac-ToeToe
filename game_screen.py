@@ -178,7 +178,7 @@ class GameScreen(Screen):
         super().__init__(**kwargs)
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
-        button_layout = BoxLayout(size_hint=(1, None), height=50)
+        button_layout = BoxLayout(size_hint=(1, None), height=config.widget_height)
         back_to_menu_button = Button(text='Back to Menu')
         back_to_menu_button.bind(on_press=self.back_to_menu)
         reset_game_button = Button(text='Reset Game')

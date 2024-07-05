@@ -9,7 +9,7 @@ class ScoresScreen(Screen):
         super().__init__(**kwargs)
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
-        self.score_label = Label(font_size=50, font_name=config.global_font, halign='center')
+        self.score_label = Label(font_size=100, font_name=config.global_font, halign='center')
         layout.add_widget(self.score_label)
 
         self.add_widget(layout)
