@@ -12,7 +12,7 @@ title = TicTic TacTac ToeToe
 package.name = TicTacToe
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test
+package.domain = Amminite
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -42,7 +42,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy
+requirements = python3,kivy,pyjnius
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
