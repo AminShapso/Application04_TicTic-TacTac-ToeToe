@@ -1,6 +1,6 @@
 # PyPi imports:
+import kivy.metrics
 from kivy.app import App
-# from kivy.metrics import dp, sp
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
 from kivy.utils import platform
@@ -12,7 +12,7 @@ from scores_screen import ScoresScreen
 
 
 set_window = [True,                 # to set, or not to set
-              True,                 # True to refactor, False to keep original resolution
+              1,                    # Refactor screen
               [[1080, 2176, 409],   # 0 = Xiaomi Redmi Note 11S - Portrait
                [2176, 986, 409],    # 1 = Xiaomi Redmi Note 11S - Landscape
                [1080, 2268, 398],   # 2 = Xiaomi Mi Note 10 Pro - Portrait
@@ -30,15 +30,10 @@ if platform == "android":
     activity = PythonActivity.mActivity
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER)
 elif set_window[0]:
-    if set_window[1] and (set_window[2][0] > 2000 or set_window[2][1] > 2000):
-        Window.size = int(set_window[2][0] / 3), int(set_window[2][1] / 3)
-        Window.dpi = set_window[2][2] / 3
-    elif set_window[1] and (set_window[2][0] > 1000 or set_window[2][1] > 1000):
-        Window.size = int(set_window[2][0] / 2), int(set_window[2][1] / 2)
-        Window.dpi = set_window[2][2] / 2
-    else:
-        Window.size = set_window[2][0], set_window[2][1]
-        Window.dpi = set_window[2][2]
+    Window.size = int(set_window[2][0] / set_window[1]), int(set_window[2][1] / set_window[1])
+    Window.dpi = int(set_window[2][2] / set_window[1])
+    # kivy.metrics.Metrics.density = 0.75       # either 0.75, 1, 1.5 or 2
+    # kivy.metrics.Metrics.fontscale = 1        #  between 0.8 and 1.2
 
 
 class TicTacToeApp(App):
