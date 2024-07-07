@@ -18,11 +18,13 @@ global_font = os.path.join(assets_path, 'arial.ttf')
 if platform == "android":
     widget_height_pixels = 80
     widget_height_percentage = 0.05
-    font_size = 100
+    font_size_big = 100
+    font_size_small = "20sp"
 else:
     widget_height_pixels = 35
     widget_height_percentage = None
-    font_size = 50
+    font_size_big = 50
+    font_size_small = 20
 player_symbols = ['X', 'O', '□', 'Δ', '◊', '*']
 list_of_colors = None
 player_sounds = [f'assets/Audio - Player Sound {i:02}.wav' for i in range(1, 14)]

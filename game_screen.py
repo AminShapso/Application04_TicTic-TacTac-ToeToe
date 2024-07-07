@@ -22,7 +22,7 @@ class TicTacToeGame(Widget):
         self.starting_player = 0
         self.current_player = 0 + self.starting_player
         self.game_over = False
-        self.result_label = Label(text=f"Player {config.player_symbols[self.current_player]}'s turn", font_name=config.global_font, font_size='20sp', size_hint=(1, None))
+        self.result_label = Label(text=f"Player {config.player_symbols[self.current_player]}'s turn", font_name=config.global_font, font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
         self.board = [[None for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         self.scores = {player: 0 for player in range(self.max_num_players)}
         self.colors = self.generate_random_colors()
@@ -183,13 +183,13 @@ class GameScreen(Screen):
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
         button_layout = BoxLayout(size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
-        back_to_menu_button = Button(text='Back to Menu')
+        back_to_menu_button = Button(text='Back to Menu', font_size=config.font_size_small)
         back_to_menu_button.bind(on_press=self.back_to_menu)
-        reset_game_button = Button(text='Reset Game')
+        reset_game_button = Button(text='Reset Game', font_size=config.font_size_small)
         reset_game_button.bind(on_press=self.reset_game)
-        reset_results_button = Button(text='Reset Results')
+        reset_results_button = Button(text='Reset Results', font_size=config.font_size_small)
         reset_results_button.bind(on_press=self.reset_results)
-        view_scores_button = Button(text='View Scores')
+        view_scores_button = Button(text='View Scores', font_size=config.font_size_small)
         view_scores_button.bind(on_press=self.view_scores)
         button_layout.add_widget(back_to_menu_button)
         button_layout.add_widget(reset_game_button)

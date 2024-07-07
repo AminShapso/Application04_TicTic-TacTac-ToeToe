@@ -13,7 +13,7 @@ class ScoresScreen(Screen):
             Image(source='assets/Icon 02.png', pos=self.pos, size=Window.system_size, opacity=0.5)
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
-        self.score_label = Label(font_size=config.font_size, font_name=config.global_font, halign='center')
+        self.score_label = Label(font_size=config.font_size_big, font_name=config.global_font, halign='center')
         layout.add_widget(self.score_label)
 
         self.add_widget(layout)
