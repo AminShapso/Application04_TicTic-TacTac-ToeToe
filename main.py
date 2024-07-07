@@ -19,7 +19,7 @@ set_window = [True,                 # to set, or not to set
                [2268, 1080, 398],   # 3 = Xiaomi Mi Note 10 Pro - Landscape
                [1008, 2076, 489],   # 4 = Google Pixel 8 Pro - Portrait
                [2130, 890, 489],    # 5 = Google Pixel 8 Pro - Landscape
-               [800, 800, 150]]     # 6 = Custom 01
+               [600, 800, 200]]     # 6 = Custom 01
               [6]]                  # pick from the phones above
 
 

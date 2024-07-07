@@ -1,5 +1,7 @@
 import config
+from kivy.core.window import Window
 from kivy.graphics import Color, Line
+from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.label import Label
@@ -11,6 +13,8 @@ from kivy.core.audio import SoundLoader
 class TicTacToeGame(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        with self.canvas.before:
+            Image(source='assets/Icon 02.png', pos=self.pos, size=Window.system_size, opacity=0.1)
         self.grid_height = 3
         self.grid_width = 3
         self.num_players = 2
@@ -178,7 +182,7 @@ class GameScreen(Screen):
         super().__init__(**kwargs)
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
-        button_layout = BoxLayout(size_hint=(1, config.widget_height_precentage), height=config.widget_height_pixels)
+        button_layout = BoxLayout(size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
         back_to_menu_button = Button(text='Back to Menu')
         back_to_menu_button.bind(on_press=self.back_to_menu)
         reset_game_button = Button(text='Reset Game')
