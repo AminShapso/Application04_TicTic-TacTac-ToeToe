@@ -18,9 +18,10 @@ class TicTacToeGame(Widget):
         self.grid_height = 3
         self.grid_width = 3
         self.num_players = 2
-        self.max_num_players = len(config.num_players_spinner_values)
+        self.max_num_players = len(config.num_players_spinner_values) + 1
         self.starting_player = 0
         self.current_player = 0 + self.starting_player
+        self.vs_ghost = False
         self.game_over = False
         self.result_label = Label(text=f"Player {config.player_symbols[self.current_player]}'s turn", font_name=config.global_font, font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
         self.board = [[None for _ in range(self.grid_width)] for _ in range(self.grid_height)]
@@ -43,6 +44,7 @@ class TicTacToeGame(Widget):
         self.update_turn_label()
         self.canvas.clear()
         self.draw_grid()
+        self.make_ghost_move()
 
     def draw_grid(self, *_):
         self.canvas.clear()
@@ -65,7 +67,10 @@ class TicTacToeGame(Widget):
 
     def on_touch_down(self, touch):
         if not self.game_over:
-            row, col = self.get_clicked_row_col(touch)
+            if self.current_player == (self.num_players - 1) and self.vs_ghost:
+                row, col = touch
+            else:
+                row, col = self.get_clicked_row_col(touch)
             if row is not None and col is not None and self.board[row][col] is None:
                 self.board[row][col] = self.current_player
                 self.draw_symbol(row, col, self.current_player)
@@ -81,6 +86,7 @@ class TicTacToeGame(Widget):
                 else:
                     self.current_player = (self.current_player + 1) % self.num_players
                     self.update_turn_label()
+                    self.make_ghost_move()
 
         # If the game is over, switch to score screen on next click
         elif self.game_over:
@@ -89,6 +95,26 @@ class TicTacToeGame(Widget):
             score_screen.update_scores(self.scores, self.num_players)
             self.parent.parent.manager.current = 'scores'
             self.parent.parent.reset_game(None)
+
+    def make_ghost_move(self):
+        if self.current_player == (self.num_players - 1) and self.vs_ghost:
+            # for i in range(1, 10):
+            #     copy = getBoardCopy(board)
+            #     if isSpaceFree(copy, i):
+            #         makeMove(copy, computerLetter, i)
+            #         if isWinner(copy, computerLetter):
+            #             return i
+            #
+            # for i in range(1, 10):
+            #     copy = getBoardCopy(board)
+            #     if isSpaceFree(copy, i):
+            #         makeMove(copy, playerLetter, i)
+            #         if isWinner(copy, playerLetter):
+            #             return i
+
+
+
+            print('self.on_touch_down((0, 0))')
 
     def get_clicked_row_col(self, touch):
         cell_height = self.height / self.grid_height

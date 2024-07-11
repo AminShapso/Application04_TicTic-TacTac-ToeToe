@@ -7,6 +7,7 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 from kivy.uix.spinner import Spinner
+from kivy.uix.checkbox import CheckBox
 
 
 class WelcomeScreen(Screen):
@@ -20,6 +21,12 @@ class WelcomeScreen(Screen):
         layout.add_widget(Label(text='Number of Players:', font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))
         self.num_players_spinner = Spinner(text='2', font_size=config.font_size_small, values=config.num_players_spinner_values, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
         layout.add_widget(self.num_players_spinner)
+        layout.add_widget(Label(size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))  # for spacing
+
+        # Ghost player
+        layout.add_widget(Label(text='Ghost:', font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))
+        self.vs_ghost_checkbox = CheckBox(active=False, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
+        layout.add_widget(self.vs_ghost_checkbox)
         layout.add_widget(Label(size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))  # for spacing
 
         # Grid layout
@@ -63,14 +70,13 @@ class WelcomeScreen(Screen):
         self.add_widget(layout)
 
     def start_game(self, _):
+        game_screen = self.manager.get_screen('game')
+
         grid_height = int(self.grid_height_spinner.text)
         grid_width = int(self.grid_width_spinner.text)
-        try:
-            num_players = int(self.num_players_spinner.text)
-        except ValueError:
-            num_players = 2     # if self.num_players_spinner.text == 'vs. Python'
+        num_players = int(self.num_players_spinner.text)
 
-        game_screen = self.manager.get_screen('game')
+        game_screen.game.vs_ghost = self.vs_ghost_checkbox.active
         game_screen.game.initialize_game(grid_height, grid_width, num_players)
         game_screen.game.colors = game_screen.game.generate_random_colors()
         random.shuffle(config.player_sounds)
