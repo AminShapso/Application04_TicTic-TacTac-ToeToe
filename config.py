@@ -9,7 +9,6 @@ grid_width_spinner_values = [str(i) for i in range(3, 11)]
 grid_height_spinner_values = [str(i) for i in range(3, 11)]
 symbol_sequence_spinner_values = [str(i) for i in range(3, 11)] + ['Off']
 num_players_spinner_values = ['2', '3', '4', '5', '6']
-vs_ghost_moves_ahead = 1
 
 
 # Globals

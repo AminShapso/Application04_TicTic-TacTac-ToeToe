@@ -1,4 +1,6 @@
 import config
+import copy
+import random
 from kivy.core.window import Window
 from kivy.graphics import Color, Line
 from kivy.uix.image import Image
@@ -98,23 +100,48 @@ class TicTacToeGame(Widget):
 
     def make_ghost_move(self):
         if self.current_player == (self.num_players - 1) and self.vs_ghost:
-            # for i in range(1, 10):
-            #     copy = getBoardCopy(board)
-            #     if isSpaceFree(copy, i):
-            #         makeMove(copy, computerLetter, i)
-            #         if isWinner(copy, computerLetter):
-            #             return i
-            #
-            # for i in range(1, 10):
-            #     copy = getBoardCopy(board)
-            #     if isSpaceFree(copy, i):
-            #         makeMove(copy, playerLetter, i)
-            #         if isWinner(copy, playerLetter):
-            #             return i
+            # Iterate for each grid posiotn, and for each player
+            for row in range(self.grid_height):
+                for col in range(self.grid_width):
+                    for symbol in range(self.num_players):
+                        board_copy = copy.deepcopy(self.board)
+                        if row is not None and col is not None and self.board[row][col] is None:
+                            self.board[row][col] = symbol
+                            if self.check_winner(row, col, symbol):
+                                self.board = copy.deepcopy(board_copy)
+                                self.on_touch_down(touch=(row, col))
+                                return None
+                        self.board = copy.deepcopy(board_copy)
 
+            # if there is no functional move, make a random move at the corners
+            list_grid_corners = [[0, 0], [0, self.grid_width - 1], [self.grid_height - 1, 0], [self.grid_height - 1, self.grid_width - 1]]
+            random.shuffle(list_grid_corners)
+            for row, col in list_grid_corners:
+                if row is not None and col is not None and self.board[row][col] is None:
+                    self.on_touch_down(touch=(row, col))
+                    return None
 
+            # random move at the middle
+            list_width_center_positions = [int(self.grid_width / 2)]
+            if self.grid_width % 2 == 0:
+                list_width_center_positions.append(int(self.grid_width / 2) - 1)
+            list_height_center_positions = [int(self.grid_height / 2)]
+            if self.grid_height % 2 == 0:
+                list_height_center_positions.append(int(self.grid_height / 2) - 1)
+            list_center_positions = [[x, y] for x in list_height_center_positions for y in list_width_center_positions]
+            random.shuffle(list_center_positions)
+            for row, col in list_center_positions:
+                if row is not None and col is not None and self.board[row][col] is None:
+                    self.on_touch_down(touch=(row, col))
+                    return None
 
-            print('self.on_touch_down((0, 0))')
+            # random move:
+            list_all_positions = [[x, y] for x in range(self.grid_height) for y in range(self.grid_width)]
+            random.shuffle(list_all_positions)
+            for row, col in list_all_positions:
+                if row is not None and col is not None and self.board[row][col] is None:
+                    self.on_touch_down(touch=(row, col))
+                    return None
 
     def get_clicked_row_col(self, touch):
         cell_height = self.height / self.grid_height

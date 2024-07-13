@@ -1,5 +1,5 @@
 # PyPi imports:
-import kivy.metrics
+# import kivy.metrics
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
@@ -51,12 +51,9 @@ if __name__ == '__main__':
     TicTacToeApp().run()
 
 
-# Player Sequence - fix check_winner()
+# Add winning Player Sequence - edit check_winner()
 # Change beginning player - every new game, a different player starts
 # Change colors - to be more colorful
 # make the symbols thicker
 # draw_symbol - split into different methods: draw_x(), draw_O()
-
-# Finally:
 # Add themes and sounds (win, tie, etc.)
-# make vs. Python work
