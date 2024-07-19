@@ -28,12 +28,8 @@ class TicTacToeGame(Widget):
         self.result_label = Label(text=f"Player {config.player_symbols[self.current_player]}'s turn", font_name=config.global_font, font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
         self.board = [[None for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         self.scores = {player: 0 for player in range(self.max_num_players)}
-        self.colors = self.generate_random_colors()
+        self.colors = config.generate_random_colors()
         self.winning_sequence = []
-
-    def generate_random_colors(self):
-        config.generate_random_colors_new(range(self.max_num_players))
-        return dict(config.list_of_colors)
 
     def initialize_game(self, grid_height, grid_width, num_players):
         self.grid_height = grid_height

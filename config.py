@@ -1,6 +1,5 @@
 import os
 import random
-from random import uniform
 from kivy.utils import platform
 
 
@@ -25,22 +24,18 @@ else:
     widget_height_percentage = None
     font_size_big = 50
     font_size_small = 20
-player_symbols = ['X', 'O', '□', 'Δ', '◊', '*']
+player_symbols = ['X', 'O', '□', 'Δ', '◊', 'ж']
 list_of_colors = None
 player_sounds = [f'assets/Audio - Player Sound {i:02}.wav' for i in range(1, 14)]
 
 
-def generate_random_colors_old(number_of_players):
-    global list_of_colors
-    list_of_colors = ['#{:06x}'.format(random.randint(0x111111, 0xEEEEEE)) for _ in range(number_of_players)]  # 0 and F are too extreme
-
-
-def generate_random_colors_new(number_of_players):
+def generate_random_colors():
     global list_of_colors
     list_of_colors = {}
-    for player in number_of_players:
+    for player in range(len(num_players_spinner_values) + 1):
         list_of_colors[player] = (
-            uniform(0.4, 0.8),  # Red
-            uniform(0.4, 0.8),  # Green
-            uniform(0.4, 0.8)   # Blue
+            random.randint(30, 230) / 255,  # Red
+            random.randint(30, 230) / 255,  # Green
+            random.randint(30, 230) / 255   # Blue
         )
+    return list_of_colors

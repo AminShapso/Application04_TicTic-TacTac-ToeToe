@@ -78,7 +78,7 @@ class WelcomeScreen(Screen):
 
         game_screen.game.vs_ghost = self.vs_ghost_checkbox.active
         game_screen.game.initialize_game(grid_height, grid_width, num_players)
-        game_screen.game.colors = game_screen.game.generate_random_colors()
+        game_screen.game.colors = config.generate_random_colors()
         random.shuffle(config.player_sounds)
         self.manager.transition.direction = 'left'
         self.manager.current = 'game'
