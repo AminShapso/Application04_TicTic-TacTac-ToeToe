@@ -36,7 +36,7 @@ class TicTacToeGame(Widget):
         self.grid_width = grid_width
         self.num_players = num_players
         self.board = [[None for _ in range(grid_width)] for _ in range(grid_height)]
-        self.current_player = 0
+        self.current_player = 0 + self.starting_player
         self.game_over = False
         self.winning_sequence = []
         self.update_turn_label()
@@ -72,14 +72,20 @@ class TicTacToeGame(Widget):
             if row is not None and col is not None and self.board[row][col] is None:
                 self.board[row][col] = self.current_player
                 self.draw_symbol(row, col, self.current_player)
-                self.play_sound(self.current_player)
+                self.play_sound(player=self.current_player, sound_type="players")
                 if self.check_winner(row, col, self.current_player):
                     self.result_label.text = f"Player {config.player_symbols[self.current_player]} wins!"
+                    self.play_sound(sound_type="results", result="win")
                     self.scores[self.current_player] += 1
                     self.game_over = True
                     self.draw_winning_line()
+                    if self.starting_player == (self.num_players - 1):  # Change player every round
+                        self.starting_player = 0
+                    else:
+                        self.starting_player += 1
                 elif self.check_tie():
                     self.result_label.text = "It's a tie!"
+                    self.play_sound(sound_type="results", result="tie")
                     self.game_over = True
                 else:
                     self.current_player = (self.current_player + 1) % self.num_players
@@ -153,8 +159,15 @@ class TicTacToeGame(Widget):
             return None, None
 
     @staticmethod
-    def play_sound(player):
-        SoundLoader.load(config.player_sounds[player]).play()
+    def play_sound(sound_type, player=None, result=None):
+        match sound_type:
+            case "players":
+                SoundLoader.load(config.player_sounds[player]).play()
+            case "results":
+                if result == "win":
+                    SoundLoader.load(config.win_sound).play()
+                else:
+                    SoundLoader.load(config.tie_sound).play()
 
     def draw_symbol(self, row, col, player):
         cell_height = self.height / self.grid_height
@@ -283,6 +296,7 @@ class GameScreen(Screen):
     def back_to_menu(self, _):
         self.manager.transition.direction = 'right'
         self.manager.current = 'welcome'
+        self.game.starting_player = 0
 
     def reset_game(self, _):
         self.game.initialize_game(self.game.grid_height, self.game.grid_width, self.game.num_players)

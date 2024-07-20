@@ -27,6 +27,8 @@ else:
 player_symbols = ['X', 'O', '□', 'Δ', '◊', 'ж']
 list_of_colors = None
 player_sounds = [f'assets/Audio - Player Sound {i:02}.wav' for i in range(1, 14)]
+win_sound = f'assets/Audio - Game won.wav'
+tie_sound = f'assets/Audio - Game tie.wav'
 
 
 def generate_random_colors():
