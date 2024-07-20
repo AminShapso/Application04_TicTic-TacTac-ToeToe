@@ -152,7 +152,8 @@ class TicTacToeGame(Widget):
         else:
             return None, None
 
-    def play_sound(self, player):
+    @staticmethod
+    def play_sound(player):
         SoundLoader.load(config.player_sounds[player]).play()
 
     def draw_symbol(self, row, col, player):
@@ -161,37 +162,62 @@ class TicTacToeGame(Widget):
         with self.canvas:
             r, g, b = self.colors[player]
             Color(r, g, b, 1)
-            if player % len(config.player_symbols) == 0:    # symbol = X
-                Line(points=[col * cell_width + cell_width * 0.2, row * cell_height + cell_height * 0.2,
-                             (col + 1) * cell_width - cell_width * 0.2, (row + 1) * cell_height - cell_height * 0.2], width=2)
-                Line(points=[(col + 1) * cell_width - cell_width * 0.2, row * cell_height + cell_height * 0.2,
-                             col * cell_width + cell_width * 0.2, (row + 1) * cell_height - cell_height * 0.2], width=2)
-            elif player % len(config.player_symbols) == 1:  # symbol = O
-                Line(circle=(col * cell_width + cell_width / 2, row * cell_height + cell_height / 2,
-                             min(cell_width, cell_height) / 3), width=2)
-            elif player % len(config.player_symbols) == 2:  # symbol = □
-                Line(rectangle=(col * cell_width + cell_width * 0.2, row * cell_height + cell_height * 0.2,
-                                cell_width * 0.6, cell_height * 0.6), width=2)
-            elif player % len(config.player_symbols) == 3:  # symbol = △
-                Line(points=[col * cell_width + cell_width * 0.5, row * cell_height + cell_height * 0.8,
-                             col * cell_width + cell_width * 0.8, row * cell_height + cell_height * 0.2,
-                             col * cell_width + cell_width * 0.2, row * cell_height + cell_height * 0.2,
-                             col * cell_width + cell_width * 0.5, row * cell_height + cell_height * 0.8], width=2)
-            elif player % len(config.player_symbols) == 4:  # symbol = ◇
-                Line(points=[col * cell_width + cell_width * 0.5, row * cell_height + cell_height * 0.8,
-                             col * cell_width + cell_width * 0.8, row * cell_height + cell_height * 0.5,
-                             col * cell_width + cell_width * 0.5, row * cell_height + cell_height * 0.2,
-                             col * cell_width + cell_width * 0.2, row * cell_height + cell_height * 0.5,
-                             col * cell_width + cell_width * 0.5, row * cell_height + cell_height * 0.8], width=2)
-            else:   # symbol = *
-                Line(points=[col * cell_width + cell_width * 0.5, row * cell_height + cell_height * 0.8,
-                             col * cell_width + cell_width * 0.5, row * cell_height + cell_height * 0.2], width=2)
-                Line(points=[col * cell_width + cell_width * 0.2, row * cell_height + cell_height * 0.5,
-                             col * cell_width + cell_width * 0.8, row * cell_height + cell_height * 0.5], width=2)
-                Line(points=[col * cell_width + cell_width * 0.3, row * cell_height + cell_height * 0.3,
-                             col * cell_width + cell_width * 0.7, row * cell_height + cell_height * 0.7], width=2)
-                Line(points=[col * cell_width + cell_width * 0.3, row * cell_height + cell_height * 0.7,
-                             col * cell_width + cell_width * 0.7, row * cell_height + cell_height * 0.3], width=2)
+            match player % len(config.player_symbols):
+                case 0:
+                    self.draw_player_01(row, col, cell_height, cell_width)      # symbol = X
+                case 1:
+                    self.draw_player_02(row, col, cell_height, cell_width)      # symbol = O
+                case 2:
+                    self.draw_player_03(row, col, cell_height, cell_width)      # symbol = □
+                case 3:
+                    self.draw_player_04(row, col, cell_height, cell_width)      # symbol = △
+                case 4:
+                    self.draw_player_05(row, col, cell_height, cell_width)      # symbol = ◇
+                case _:
+                    self.draw_player_06(row, col, cell_height, cell_width)      # symbol = *
+
+    @staticmethod
+    def draw_player_01(row, col, cell_height, cell_width, pading=0.2, thickness=5):   # symbol = X
+        Line(points=[col * cell_width + cell_width * pading, row * cell_height + cell_height * pading,
+                     (col + 1) * cell_width - cell_width * pading, (row + 1) * cell_height - cell_height * pading], width=thickness)
+        Line(points=[(col + 1) * cell_width - cell_width * pading, row * cell_height + cell_height * pading,
+                     col * cell_width + cell_width * pading, (row + 1) * cell_height - cell_height * pading], width=thickness)
+
+    @staticmethod
+    def draw_player_02(row, col, cell_height, cell_width, pading=0.2, thickness=5):  # symbol = O
+        Line(circle=(col * cell_width + cell_width / 2, row * cell_height + cell_height / 2,
+                     min(cell_width, cell_height) / 3), width=thickness)
+
+    @staticmethod
+    def draw_player_03(row, col, cell_height, cell_width, pading=0.2, thickness=5):   # symbol = □
+        Line(rectangle=(col * cell_width + cell_width * pading, row * cell_height + cell_height * pading,
+                        cell_width * (1 - pading * 2), cell_height * (1 - pading * 2)), width=thickness)
+
+    @staticmethod
+    def draw_player_04(row, col, cell_height, cell_width, pading=0.2, thickness=5):  # symbol = Δ
+        Line(points=[col * cell_width + cell_width * 0.5, row * cell_height + cell_height * (1 - pading),
+                     col * cell_width + cell_width * (1 - pading), row * cell_height + cell_height * pading,
+                     col * cell_width + cell_width * pading, row * cell_height + cell_height * pading,
+                     col * cell_width + cell_width * 0.5, row * cell_height + cell_height * (1 - pading)], width=thickness)
+
+    @staticmethod
+    def draw_player_05(row, col, cell_height, cell_width, pading=0.2, thickness=5):   # symbol = ◊
+        Line(points=[col * cell_width + cell_width * 0.5, row * cell_height + cell_height * (1 - pading),
+                     col * cell_width + cell_width * (1 - pading), row * cell_height + cell_height * 0.5,
+                     col * cell_width + cell_width * 0.5, row * cell_height + cell_height * pading,
+                     col * cell_width + cell_width * pading, row * cell_height + cell_height * 0.5,
+                     col * cell_width + cell_width * 0.5, row * cell_height + cell_height * (1 - pading)], width=thickness)
+
+    @staticmethod
+    def draw_player_06(row, col, cell_height, cell_width, pading_1=0.2, pading_2=0.275, thickness=5):   # symbol = ж
+        Line(points=[col * cell_width + cell_width * 0.5, row * cell_height + cell_height * (1 - pading_1),
+                     col * cell_width + cell_width * 0.5, row * cell_height + cell_height * pading_1], width=thickness)
+        Line(points=[col * cell_width + cell_width * pading_1, row * cell_height + cell_height * 0.5,
+                     col * cell_width + cell_width * (1 - pading_1), row * cell_height + cell_height * 0.5], width=thickness)
+        Line(points=[col * cell_width + cell_width * pading_2, row * cell_height + cell_height * pading_2,
+                     col * cell_width + cell_width * (1 - pading_2), row * cell_height + cell_height * (1 - pading_2)], width=thickness)
+        Line(points=[col * cell_width + cell_width * pading_2, row * cell_height + cell_height * (1 - pading_2),
+                     col * cell_width + cell_width * (1 - pading_2), row * cell_height + cell_height * pading_2], width=thickness)
 
     def draw_winning_line(self):
         cell_height = self.height / self.grid_height

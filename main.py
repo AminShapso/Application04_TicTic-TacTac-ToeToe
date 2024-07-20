@@ -53,7 +53,4 @@ if __name__ == '__main__':
 
 # Add winning Player Sequence - edit check_winner()
 # Change beginning player - every new game, a different player starts
-# Change colors - to be more colorful
-# make the symbols thicker
-# draw_symbol - split into different methods: draw_x(), draw_O()
 # Add themes and sounds (win, tie, etc.)
