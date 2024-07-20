@@ -52,8 +52,4 @@ if __name__ == '__main__':
 
 
 # Add winning Player Sequence - edit check_winner()
-
-# finish these pls check
-
-# Change beginning player - every new game, a different player starts
-# Add themes and sounds (win, tie, etc.)
+# Add delay for ghost_move

@@ -10,6 +10,7 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 from kivy.core.audio import SoundLoader
+from kivy.clock import Clock
 
 
 class TicTacToeGame(Widget):
@@ -22,7 +23,7 @@ class TicTacToeGame(Widget):
         self.num_players = 2
         self.max_num_players = len(config.num_players_spinner_values) + 1
         self.starting_player = 0
-        self.current_player = 0 + self.starting_player
+        self.current_player = self.starting_player
         self.vs_ghost = False
         self.game_over = False
         self.result_label = Label(text=f"Player {config.player_symbols[self.current_player]}'s turn", font_name=config.global_font, font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
@@ -36,7 +37,7 @@ class TicTacToeGame(Widget):
         self.grid_width = grid_width
         self.num_players = num_players
         self.board = [[None for _ in range(grid_width)] for _ in range(grid_height)]
-        self.current_player = 0 + self.starting_player
+        self.current_player = self.starting_player
         self.game_over = False
         self.winning_sequence = []
         self.update_turn_label()
@@ -72,28 +73,25 @@ class TicTacToeGame(Widget):
             if row is not None and col is not None and self.board[row][col] is None:
                 self.board[row][col] = self.current_player
                 self.draw_symbol(row, col, self.current_player)
-                self.play_sound(player=self.current_player, sound_type="players")
                 if self.check_winner(row, col, self.current_player):
                     self.result_label.text = f"Player {config.player_symbols[self.current_player]} wins!"
                     self.play_sound(sound_type="results", result="win")
                     self.scores[self.current_player] += 1
                     self.game_over = True
                     self.draw_winning_line()
-                    if self.starting_player == (self.num_players - 1):  # Change player every round
-                        self.starting_player = 0
-                    else:
-                        self.starting_player += 1
                 elif self.check_tie():
                     self.result_label.text = "It's a tie!"
                     self.play_sound(sound_type="results", result="tie")
                     self.game_over = True
                 else:
+                    self.play_sound(player=self.current_player, sound_type="players")
                     self.current_player = (self.current_player + 1) % self.num_players
                     self.update_turn_label()
                     self.make_ghost_move()
 
         # If the game is over, switch to score screen on next click
         elif self.game_over:
+            self.starting_player = (self.starting_player + 1) % self.num_players
             self.parent.parent.manager.transition.direction = 'left'
             score_screen = self.parent.parent.manager.get_screen('scores')
             score_screen.update_scores(self.scores, self.num_players)
@@ -102,6 +100,7 @@ class TicTacToeGame(Widget):
 
     def make_ghost_move(self):
         if self.current_player == (self.num_players - 1) and self.vs_ghost:
+            # Clock.usleep(1 * 1000 * 1000)  # 1 second delay
             # Iterate for each grid posiotn, and for each player
             for row in range(self.grid_height):
                 for col in range(self.grid_width):
@@ -148,7 +147,6 @@ class TicTacToeGame(Widget):
     def get_clicked_row_col(self, touch):
         cell_height = self.height / self.grid_height
         cell_width = self.width / self.grid_width
-
         row = int(touch.y // cell_height)
         col = int(touch.x // cell_width)
 
@@ -164,10 +162,7 @@ class TicTacToeGame(Widget):
             case "players":
                 SoundLoader.load(config.player_sounds[player]).play()
             case "results":
-                if result == "win":
-                    SoundLoader.load(config.win_sound).play()
-                else:
-                    SoundLoader.load(config.tie_sound).play()
+                SoundLoader.load(config.result_sounds[result]).play()
 
     def draw_symbol(self, row, col, player):
         cell_height = self.height / self.grid_height
@@ -188,6 +183,7 @@ class TicTacToeGame(Widget):
                     self.draw_player_05(row, col, cell_height, cell_width)      # symbol = ◇
                 case _:
                     self.draw_player_06(row, col, cell_height, cell_width)      # symbol = *
+
 
     @staticmethod
     def draw_player_01(row, col, cell_height, cell_width, pading=0.2, thickness=5):   # symbol = X
