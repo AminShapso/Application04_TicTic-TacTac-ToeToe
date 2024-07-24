@@ -75,9 +75,12 @@ class WelcomeScreen(Screen):
         grid_height = int(self.grid_height_spinner.text)
         grid_width = int(self.grid_width_spinner.text)
         num_players = int(self.num_players_spinner.text)
+        row_sequence = int(self.symbol_sequence_row_spinner.text)
+        column_sequence = int(self.symbol_sequence_column_spinner.text)
+        diagonal_sequence = int(self.symbol_sequence_diagonal_spinner.text)
 
         game_screen.game.vs_ghost = self.vs_ghost_checkbox.active
-        game_screen.game.initialize_game(grid_height, grid_width, num_players)
+        game_screen.game.initialize_game(grid_height, grid_width, num_players, row_sequence, column_sequence, diagonal_sequence)
         game_screen.game.colors = config.generate_random_colors()
         random.shuffle(config.player_sounds)
         self.manager.transition.direction = 'left'

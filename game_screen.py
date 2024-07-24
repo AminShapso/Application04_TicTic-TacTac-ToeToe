@@ -20,6 +20,9 @@ class TicTacToeGame(Widget):
             Image(source='assets/Icon 02.png', pos=self.pos, size=Window.system_size, opacity=0.1)
         self.grid_height = 3
         self.grid_width = 3
+        self.row_sequence = 3
+        self.column_sequence = 3
+        self.diagonal_sequence = 3
         self.num_players = 2
         self.max_num_players = len(config.num_players_spinner_values) + 1
         self.starting_player = 0
@@ -32,11 +35,17 @@ class TicTacToeGame(Widget):
         self.colors = config.generate_random_colors()
         self.winning_sequence = []
 
-    def initialize_game(self, grid_height, grid_width, num_players):
+    def initialize_game(self, grid_height, grid_width, num_players, row_sequence, column_sequence, diagonal_sequence):
         self.grid_height = grid_height
         self.grid_width = grid_width
+        self.row_sequence = row_sequence
+        self.column_sequence = column_sequence
+        self.diagonal_sequence = diagonal_sequence
         self.num_players = num_players
-        self.board = [[None for _ in range(grid_width)] for _ in range(grid_height)]
+        self.initialize_board()
+
+    def initialize_board(self):
+        self.board = [[None for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         self.current_player = self.starting_player
         self.game_over = False
         self.winning_sequence = []
@@ -73,7 +82,7 @@ class TicTacToeGame(Widget):
             if row is not None and col is not None and self.board[row][col] is None:
                 self.board[row][col] = self.current_player
                 self.draw_symbol(row, col, self.current_player)
-                if self.check_winner(row, col, self.current_player):
+                if self.check_winner_2(row, col, self.current_player):
                     self.result_label.text = f"Player {config.player_symbols[self.current_player]} wins!"
                     self.play_sound(sound_type="results", result="win")
                     self.scores[self.current_player] += 1
@@ -108,7 +117,7 @@ class TicTacToeGame(Widget):
                         board_copy = copy.deepcopy(self.board)
                         if row is not None and col is not None and self.board[row][col] is None:
                             self.board[row][col] = symbol
-                            if self.check_winner(row, col, symbol):
+                            if self.check_winner_2(row, col, symbol):
                                 self.board = copy.deepcopy(board_copy)
                                 self.on_touch_down(touch=(row, col))
                                 return None
@@ -233,11 +242,46 @@ class TicTacToeGame(Widget):
         cell_width = self.width / self.grid_width
         with self.canvas:
             Color(1, 1, 1, 1)  # White color for the winning line
-            for i in range(len(self.winning_sequence) - 1):
-                start_row, start_col = self.winning_sequence[i]
-                end_row, end_col = self.winning_sequence[i + 1]
-                Line(points=[start_col * cell_width + cell_width / 2, start_row * cell_height + cell_height / 2,
-                             end_col * cell_width + cell_width / 2, end_row * cell_height + cell_height / 2], width=4)
+            start_row, start_col = self.winning_sequence[0]
+            end_row, end_col = self.winning_sequence[1]
+            Line(points=[start_col * cell_width + cell_width / 2, start_row * cell_height + cell_height / 2, end_col * cell_width + cell_width / 2, end_row * cell_height + cell_height / 2], width=4)
+
+    def check_winner_2(self, row, col, symbol):
+        # self.row_sequence = row_sequence
+        # self.column_sequence = column_sequence
+        # self.diagonal_sequence = diagonal_sequence
+        # Check row:
+
+        #   x = c , y = r, n = i
+
+        for c in range(self.grid_width - self.row_sequence + 1):
+            if all([self.board[row][i + c] == symbol for i in range(self.row_sequence)]):
+                self.winning_sequence = [(row, c), (row, self.row_sequence - 1 + c)]
+                return True
+        # Check column:
+        for r in range(self.grid_height - self.column_sequence + 1):
+            if all([self.board[i + r][col] == symbol for i in range(self.column_sequence)]):
+                self.winning_sequence = [(r, col), (self.column_sequence - 1 + r, col)]
+                return True
+        # Check diagonals:
+        for r, c in zip(range(row - self.diagonal_sequence + 1, row), range(col - self.diagonal_sequence + 1, col)):
+            if 0 <= r < self.grid_height or 0 <= c < self.grid_width:
+                try:
+                    if all([self.board[r + i][c + i] == symbol for i in range(self.diagonal_sequence)]):
+                        self.winning_sequence = [(r, c), (self.column_sequence - 1 + r, self.row_sequence - 1 + c)]
+                        return True
+                except IndexError:
+                    ...
+
+        # for z in range(min(self.diagonal_sequence, (self.grid_height - row), (self.grid_width - col))):
+        #     for y in range(row - self.diagonal_sequence)
+        # for x in range(self.grid_width - self.row_sequence + 1):
+        #     if all([self.board[n + row][n + col] == symbol for n in range(self.diagonal_sequence)]):
+        #         return [(row, col), (row + self.diagonal_sequence - 1, col + self.diagonal_sequence - 1)]
+        # for y in range(self.grid_height - self.column_sequence + 1):
+        #     if all([self.board[n + row][self.diagonal_sequence - 1 - n + col] == symbol for n in range(self.diagonal_sequence)]):
+        #         return [(row, self.diagonal_sequence - 1 + col), (row + self.diagonal_sequence - 1, col)]
+        return False
 
     def check_winner(self, row, col, symbol):
         if all(self.board[row][c] == symbol for c in range(self.grid_width)):
@@ -295,7 +339,7 @@ class GameScreen(Screen):
         self.game.starting_player = 0
 
     def reset_game(self, _):
-        self.game.initialize_game(self.game.grid_height, self.game.grid_width, self.game.num_players)
+        self.game.initialize_board()
 
     def reset_results(self, _):
         # Reset the scores to 0 for each player
