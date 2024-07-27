@@ -6,7 +6,7 @@ from kivy.utils import platform
 # WelcomeScreen spinner_values
 grid_width_spinner_values = [str(i) for i in range(3, 11)]
 grid_height_spinner_values = [str(i) for i in range(3, 11)]
-symbol_sequence_spinner_values = [str(i) for i in range(3, 11)] + ['Off']
+symbol_sequence_spinner_values = [str(i) for i in range(2, 11)] + ['Off']
 num_players_spinner_values = ['2', '3', '4', '5', '6']
 
 
