@@ -38,6 +38,8 @@ class WelcomeScreen(Screen):
         grid_layout = BoxLayout(orientation='horizontal', size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
         self.grid_width_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.grid_width_spinner_values, size_hint=(1/2, config.widget_height_percentage), height=config.widget_height_pixels)
         self.grid_height_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.grid_height_spinner_values, size_hint=(1/2, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.grid_width_spinner.bind(text=self.on_grid_change)
+        self.grid_height_spinner.bind(text=self.on_grid_change)
         grid_layout.add_widget(self.grid_width_spinner)
         grid_layout.add_widget(self.grid_height_spinner)
         layout.add_widget(grid_layout)
@@ -51,9 +53,9 @@ class WelcomeScreen(Screen):
         symbol_sequence_layout.add_widget(Label(text='Diagonal', font_size=config.font_size_small, size_hint=(1/3, 1)))
         layout.add_widget(symbol_sequence_layout)
         symbol_sequence_layout = BoxLayout(orientation='horizontal', size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
-        self.symbol_sequence_row_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.symbol_sequence_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
-        self.symbol_sequence_column_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.symbol_sequence_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
-        self.symbol_sequence_diagonal_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.symbol_sequence_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.symbol_sequence_row_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.symbol_sequence_row_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.symbol_sequence_column_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.symbol_sequence_column_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.symbol_sequence_diagonal_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.symbol_sequence_diagonal_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
         symbol_sequence_layout.add_widget(self.symbol_sequence_row_spinner)
         symbol_sequence_layout.add_widget(self.symbol_sequence_column_spinner)
         symbol_sequence_layout.add_widget(self.symbol_sequence_diagonal_spinner)
@@ -69,15 +71,30 @@ class WelcomeScreen(Screen):
         # Add all widgets to the layout
         self.add_widget(layout)
 
+    def on_grid_change(self, _, __):
+        config.generate_sequence_spinner_values(int(self.grid_height_spinner.text), int(self.grid_width_spinner.text))
+        self.symbol_sequence_row_spinner.values = config.symbol_sequence_row_spinner_values
+        self.symbol_sequence_column_spinner.values = config.symbol_sequence_column_spinner_values
+        self.symbol_sequence_diagonal_spinner.values = config.symbol_sequence_diagonal_spinner_values
+
     def start_game(self, _):
         game_screen = self.manager.get_screen('game')
 
         grid_height = int(self.grid_height_spinner.text)
         grid_width = int(self.grid_width_spinner.text)
         num_players = int(self.num_players_spinner.text)
-        row_sequence = int(self.symbol_sequence_row_spinner.text)
-        column_sequence = int(self.symbol_sequence_column_spinner.text)
-        diagonal_sequence = int(self.symbol_sequence_diagonal_spinner.text)
+        if self.symbol_sequence_row_spinner.text.isdigit():
+            row_sequence = int(self.symbol_sequence_row_spinner.text)
+        else:
+            row_sequence = 0
+        if self.symbol_sequence_column_spinner.text.isdigit():
+            column_sequence = int(self.symbol_sequence_column_spinner.text)
+        else:
+            column_sequence = 0
+        if self.symbol_sequence_diagonal_spinner.text.isdigit():
+            diagonal_sequence = int(self.symbol_sequence_diagonal_spinner.text)
+        else:
+            diagonal_sequence = 0
 
         game_screen.game.vs_ghost = self.vs_ghost_checkbox.active
         game_screen.game.initialize_game(grid_height, grid_width, num_players, row_sequence, column_sequence, diagonal_sequence)

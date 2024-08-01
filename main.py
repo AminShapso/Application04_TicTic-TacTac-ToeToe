@@ -52,5 +52,3 @@ if __name__ == '__main__':
 
 
 # Add delay for ghost_move
-# Stop sound if game is over
-# Bug with OFF sequence

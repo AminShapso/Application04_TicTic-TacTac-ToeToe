@@ -18,12 +18,12 @@ class TicTacToeGame(Widget):
         super().__init__(**kwargs)
         with self.canvas.before:
             Image(source='assets/Icon 02.png', pos=self.pos, size=Window.system_size, opacity=0.1)
-        self.grid_height = 3
-        self.grid_width = 3
-        self.row_sequence = 3
-        self.column_sequence = 3
-        self.diagonal_sequence = 3
-        self.num_players = 2
+        self.grid_height = config.default_grid
+        self.grid_width = config.default_grid
+        self.row_sequence = config.default_grid
+        self.column_sequence = config.default_grid
+        self.diagonal_sequence = config.default_grid
+        self.num_players = config.default_num_players
         self.max_num_players = len(config.num_players_spinner_values) + 1
         self.starting_player = 0
         self.current_player = self.starting_player
@@ -247,27 +247,30 @@ class TicTacToeGame(Widget):
             Line(points=[start_col * cell_width + cell_width / 2, start_row * cell_height + cell_height / 2, end_col * cell_width + cell_width / 2, end_row * cell_height + cell_height / 2], width=4)
 
     def check_winner(self, row, col, symbol):
-        for c in range(self.grid_width - self.row_sequence + 1):
-            if all([self.board[row][i + c] == symbol for i in range(self.row_sequence)]):
-                self.winning_sequence = [(row, c), (row, self.row_sequence - 1 + c)]
-                return True
+        if self.row_sequence > 0:
+            for c in range(self.grid_width - self.row_sequence + 1):
+                if all([self.board[row][i + c] == symbol for i in range(self.row_sequence)]):
+                    self.winning_sequence = [(row, c), (row, self.row_sequence - 1 + c)]
+                    return True
         # Check column:
-        for r in range(self.grid_height - self.column_sequence + 1):
-            if all([self.board[i + r][col] == symbol for i in range(self.column_sequence)]):
-                self.winning_sequence = [(r, col), (self.column_sequence - 1 + r, col)]
-                return True
-        # Check forward diagonal:
-        for r, c in zip(range(row - self.diagonal_sequence + 1, row + 1), range(col - self.diagonal_sequence + 1, col + 1)):
-            if 0 <= r <= (self.grid_height - self.diagonal_sequence) and 0 <= c <= (self.grid_width - self.diagonal_sequence):
-                if all([self.board[r + i][c + i] == symbol for i in range(self.diagonal_sequence)]):
-                    self.winning_sequence = [(r, c), (r + self.diagonal_sequence - 1, c + self.diagonal_sequence - 1)]
+        if self.column_sequence > 0:
+            for r in range(self.grid_height - self.column_sequence + 1):
+                if all([self.board[i + r][col] == symbol for i in range(self.column_sequence)]):
+                    self.winning_sequence = [(r, col), (self.column_sequence - 1 + r, col)]
                     return True
-        # Check backward diagonal:
-        for r, c in zip(reversed(range(row, row + self.diagonal_sequence)), range(col - self.diagonal_sequence + 1, col + 1)):
-            if self.diagonal_sequence - 1 <= r <= self.grid_height - 1 and 0 <= c <= (self.grid_width - self.diagonal_sequence):
-                if all([self.board[r - i][c + i] == symbol for i in range(self.diagonal_sequence)]):
-                    self.winning_sequence = [(r, c), (r - self.diagonal_sequence + 1, c + self.diagonal_sequence - 1)]
-                    return True
+        if self.diagonal_sequence > 0:
+            # Check forward diagonal:
+            for r, c in zip(range(row - self.diagonal_sequence + 1, row + 1), range(col - self.diagonal_sequence + 1, col + 1)):
+                if 0 <= r <= (self.grid_height - self.diagonal_sequence) and 0 <= c <= (self.grid_width - self.diagonal_sequence):
+                    if all([self.board[r + i][c + i] == symbol for i in range(self.diagonal_sequence)]):
+                        self.winning_sequence = [(r, c), (r + self.diagonal_sequence - 1, c + self.diagonal_sequence - 1)]
+                        return True
+            # Check backward diagonal:
+            for r, c in zip(reversed(range(row, row + self.diagonal_sequence)), range(col - self.diagonal_sequence + 1, col + 1)):
+                if self.diagonal_sequence - 1 <= r <= self.grid_height - 1 and 0 <= c <= (self.grid_width - self.diagonal_sequence):
+                    if all([self.board[r - i][c + i] == symbol for i in range(self.diagonal_sequence)]):
+                        self.winning_sequence = [(r, c), (r - self.diagonal_sequence + 1, c + self.diagonal_sequence - 1)]
+                        return True
         return False
 
     def check_tie(self):
