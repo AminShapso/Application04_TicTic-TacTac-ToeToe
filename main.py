@@ -49,6 +49,3 @@ class TicTacToeApp(App):
 
 if __name__ == '__main__':
     TicTacToeApp().run()
-
-
-# Add delay for ghost_move

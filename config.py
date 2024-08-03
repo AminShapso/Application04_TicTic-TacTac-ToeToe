@@ -20,10 +20,14 @@ dir_path = os.path.dirname(__file__)
 assets_path = os.path.join(dir_path, 'assets')
 global_font = os.path.join(assets_path, 'arial.ttf')
 if platform == "android":
-    widget_height_pixels = 80
-    widget_height_percentage = 0.05
-    font_size_big = 100
-    font_size_small = "20sp"
+    widget_height_pixels = 180
+    widget_height_percentage = 0.1
+    font_size_big = 200
+    font_size_small = "30sp"
+    # widget_height_pixels = 80
+    # widget_height_percentage = 0.05
+    # font_size_big = 100
+    # font_size_small = "20sp"
 else:
     widget_height_pixels = 35
     widget_height_percentage = None

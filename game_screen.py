@@ -1,3 +1,4 @@
+import ghost_algorithm
 import config
 import copy
 import random
@@ -10,7 +11,8 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 from kivy.core.audio import SoundLoader
-from kivy.clock import Clock
+# from kivy.clock import Clock
+# import time
 
 
 class TicTacToeGame(Widget):
@@ -29,6 +31,7 @@ class TicTacToeGame(Widget):
         self.current_player = self.starting_player
         self.vs_ghost = False
         self.game_over = False
+        self.move_counter = 0
         self.result_label = Label(text=f"Player {config.player_symbols[self.current_player]}'s turn", font_name=config.global_font, font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
         self.board = [[None for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         self.scores = {player: 0 for player in range(self.max_num_players)}
@@ -48,6 +51,7 @@ class TicTacToeGame(Widget):
         self.board = [[None for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         self.current_player = self.starting_player
         self.game_over = False
+        self.move_counter = 0
         self.winning_sequence = []
         self.update_turn_label()
         self.canvas.clear()
@@ -76,12 +80,15 @@ class TicTacToeGame(Widget):
     def on_touch_down(self, touch):
         if not self.game_over:
             if self.current_player == (self.num_players - 1) and self.vs_ghost:
+                # time.sleep(1)
+                # Clock.usleep(1 * 1000 * 1000)  # 1 second delay
                 row, col = touch
             else:
                 row, col = self.get_clicked_row_col(touch)
             if row is not None and col is not None and self.board[row][col] is None:
                 self.board[row][col] = self.current_player
                 self.draw_symbol(row, col, self.current_player)
+                self.move_counter += 1
                 if self.check_winner(row, col, self.current_player):
                     self.result_label.text = f"Player {config.player_symbols[self.current_player]} wins!"
                     self.play_sound(sound_type="results", result="win")
@@ -109,49 +116,84 @@ class TicTacToeGame(Widget):
 
     def make_ghost_move(self):
         if self.current_player == (self.num_players - 1) and self.vs_ghost:
-            # Clock.usleep(1 * 1000 * 1000)  # 1 second delay
-            # Iterate for each grid posiotn, and for each player
-            for row in range(self.grid_height):
-                for col in range(self.grid_width):
-                    for symbol in range(self.num_players):
-                        board_copy = copy.deepcopy(self.board)
-                        if row is not None and col is not None and self.board[row][col] is None:
-                            self.board[row][col] = symbol
-                            if self.check_winner(row, col, symbol):
-                                self.board = copy.deepcopy(board_copy)
-                                self.on_touch_down(touch=(row, col))
-                                return None
-                        self.board = copy.deepcopy(board_copy)
-
-            # if there is no functional move, make a random move at the corners
-            list_grid_corners = [[0, 0], [0, self.grid_width - 1], [self.grid_height - 1, 0], [self.grid_height - 1, self.grid_width - 1]]
-            random.shuffle(list_grid_corners)
-            for row, col in list_grid_corners:
-                if row is not None and col is not None and self.board[row][col] is None:
-                    self.on_touch_down(touch=(row, col))
+            if self.grid_height > 4 or self.grid_width > 4 or self.num_players > 2:
+                if self.ghost_move_functional():
                     return None
-
-            # random move at the middle
-            list_width_center_positions = [int(self.grid_width / 2)]
-            if self.grid_width % 2 == 0:
-                list_width_center_positions.append(int(self.grid_width / 2) - 1)
-            list_height_center_positions = [int(self.grid_height / 2)]
-            if self.grid_height % 2 == 0:
-                list_height_center_positions.append(int(self.grid_height / 2) - 1)
-            list_center_positions = [[x, y] for x in list_height_center_positions for y in list_width_center_positions]
-            random.shuffle(list_center_positions)
-            for row, col in list_center_positions:
-                if row is not None and col is not None and self.board[row][col] is None:
-                    self.on_touch_down(touch=(row, col))
+                if self.move_counter == 0:
+                    if self.ghost_move_corner():
+                        return None
+                if self.move_counter == 2 and self.board[int(self.grid_height / 2)][int(self.grid_width / 2)] is None:
+                    if self.ghost_move_corner():
+                        return None
+                if self.ghost_move_middle():
                     return None
-
-            # random move:
-            list_all_positions = [[x, y] for x in range(self.grid_height) for y in range(self.grid_width)]
-            random.shuffle(list_all_positions)
-            for row, col in list_all_positions:
-                if row is not None and col is not None and self.board[row][col] is None:
-                    self.on_touch_down(touch=(row, col))
+                if self.ghost_move_corner():
                     return None
+                if self.ghost_move_random():
+                    return None
+            else:
+                ghost_algorithm.initilaize(self.grid_height, self.grid_width, self.row_sequence, self.column_sequence, self.diagonal_sequence)
+                if self.grid_height == 3 and self.grid_width == 3 and self.row_sequence == 3 and self.column_sequence == 3 and self.diagonal_sequence == 3:
+                    ghost_algorithm.new_method = False
+                else:
+                    if self.move_counter < 8:
+                        if self.ghost_move_corner():
+                            return None
+                    ghost_algorithm.new_method = True
+                best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board))
+                self.on_touch_down(touch=(best_move[0], best_move[1]))
+                return None
+
+    def ghost_move_functional(self):
+        """Search for a winning or a losing move, and make the ghost take a move for it"""
+        for row in range(self.grid_height):
+            for col in range(self.grid_width):
+                for symbol in range(self.num_players):
+                    board_copy = copy.deepcopy(self.board)
+                    if row is not None and col is not None and self.board[row][col] is None:
+                        self.board[row][col] = symbol
+                        if self.check_winner(row, col, symbol):
+                            self.board = copy.deepcopy(board_copy)
+                            self.on_touch_down(touch=(row, col))
+                            return True
+                    self.board = copy.deepcopy(board_copy)
+        return False
+
+    def ghost_move_corner(self):
+        """Make the ghost take a random move at the corner"""
+        list_grid_corners = [[0, 0], [0, self.grid_width - 1], [self.grid_height - 1, 0], [self.grid_height - 1, self.grid_width - 1]]
+        random.shuffle(list_grid_corners)
+        for row, col in list_grid_corners:
+            if row is not None and col is not None and self.board[row][col] is None:
+                self.on_touch_down(touch=(row, col))
+                return True
+        return False
+
+    def ghost_move_middle(self):
+        """Make the ghost take a random move at the middle"""
+        list_width_center_positions = [int(self.grid_width / 2)]
+        if self.grid_width % 2 == 0:
+            list_width_center_positions.append(int(self.grid_width / 2) - 1)
+        list_height_center_positions = [int(self.grid_height / 2)]
+        if self.grid_height % 2 == 0:
+            list_height_center_positions.append(int(self.grid_height / 2) - 1)
+        list_center_positions = [[x, y] for x in list_height_center_positions for y in list_width_center_positions]
+        random.shuffle(list_center_positions)
+        for row, col in list_center_positions:
+            if row is not None and col is not None and self.board[row][col] is None:
+                self.on_touch_down(touch=(row, col))
+                return True
+        return False
+
+    def ghost_move_random(self):
+        """Make the ghost take a random move at the board"""
+        list_all_positions = [[x, y] for x in range(self.grid_height) for y in range(self.grid_width)]
+        random.shuffle(list_all_positions)
+        for row, col in list_all_positions:
+            if row is not None and col is not None and self.board[row][col] is None:
+                self.on_touch_down(touch=(row, col))
+                return True
+        return False
 
     def get_clicked_row_col(self, touch):
         cell_height = self.height / self.grid_height
@@ -200,6 +242,7 @@ class TicTacToeGame(Widget):
                      (col + 1) * cell_width - cell_width * pading, (row + 1) * cell_height - cell_height * pading], width=thickness)
         Line(points=[(col + 1) * cell_width - cell_width * pading, row * cell_height + cell_height * pading,
                      col * cell_width + cell_width * pading, (row + 1) * cell_height - cell_height * pading], width=thickness)
+
 
     @staticmethod
     def draw_player_02(row, col, cell_height, cell_width, pading=0.2, thickness=5):  # symbol = O
