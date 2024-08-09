@@ -16,16 +16,17 @@ class WelcomeScreen(Screen):
         with self.canvas.before:
             Image(source='assets/Icon 02.png', pos=self.pos, size=Window.system_size, opacity=0.5)
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        Window.bind(on_keyboard=self.on_key_down)
 
         # Number of players layout
         layout.add_widget(Label(text='Number of Players:', font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))
-        self.num_players_spinner = Spinner(text='2', font_size=config.font_size_small, values=config.num_players_spinner_values, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.num_players_spinner = Spinner(text=str(config.default_num_players), font_size=config.font_size_small, values=config.num_players_spinner_values, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
         layout.add_widget(self.num_players_spinner)
         layout.add_widget(Label(size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))  # for spacing
 
         # Ghost player
         layout.add_widget(Label(text='Ghost:', font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))
-        self.vs_ghost_checkbox = CheckBox(active=False, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.vs_ghost_checkbox = CheckBox(active=config.default_vs_ghost, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels, color=[0.9, 0.9, 0.9, 5])
         layout.add_widget(self.vs_ghost_checkbox)
         layout.add_widget(Label(size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))  # for spacing
 
@@ -36,8 +37,8 @@ class WelcomeScreen(Screen):
         grid_layout.add_widget(Label(text='Height', font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))
         layout.add_widget(grid_layout)
         grid_layout = BoxLayout(orientation='horizontal', size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
-        self.grid_width_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.grid_width_spinner_values, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
-        self.grid_height_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.grid_height_spinner_values, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.grid_width_spinner = Spinner(text=str(config.default_grid_width), font_size=config.font_size_small, values=config.grid_width_spinner_values, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.grid_height_spinner = Spinner(text=str(config.default_grid_height), font_size=config.font_size_small, values=config.grid_height_spinner_values, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
         self.grid_width_spinner.bind(text=self.on_grid_change)
         self.grid_height_spinner.bind(text=self.on_grid_change)
         grid_layout.add_widget(self.grid_width_spinner)
@@ -53,9 +54,9 @@ class WelcomeScreen(Screen):
         symbol_sequence_layout.add_widget(Label(text='Diagonal', font_size=config.font_size_small, size_hint=(1, 1)))
         layout.add_widget(symbol_sequence_layout)
         symbol_sequence_layout = BoxLayout(orientation='horizontal', size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels)
-        self.symbol_sequence_row_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.symbol_sequence_row_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
-        self.symbol_sequence_column_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.symbol_sequence_column_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
-        self.symbol_sequence_diagonal_spinner = Spinner(text='3', font_size=config.font_size_small, values=config.symbol_sequence_diagonal_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.symbol_sequence_row_spinner = Spinner(text=str(config.default_sequence_row), font_size=config.font_size_small, values=config.symbol_sequence_row_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.symbol_sequence_column_spinner = Spinner(text=str(config.default_sequence_column), font_size=config.font_size_small, values=config.symbol_sequence_column_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
+        self.symbol_sequence_diagonal_spinner = Spinner(text=str(config.default_sequence_diagonal), font_size=config.font_size_small, values=config.symbol_sequence_diagonal_spinner_values, size_hint=(1/3, config.widget_height_percentage), height=config.widget_height_pixels)
         symbol_sequence_layout.add_widget(self.symbol_sequence_row_spinner)
         symbol_sequence_layout.add_widget(self.symbol_sequence_column_spinner)
         symbol_sequence_layout.add_widget(self.symbol_sequence_diagonal_spinner)
@@ -70,6 +71,19 @@ class WelcomeScreen(Screen):
 
         # Add all widgets to the layout
         self.add_widget(layout)
+
+    def on_key_down(self, window, key, *args):
+        if key == 27 or key == 113:  # 27 is the keycode for the Android back button; 113 is for Windows key "q"
+            match self.manager.current:
+                case 'game':
+                    self.manager.transition.direction = 'right'
+                    self.manager.current = 'welcome'
+                case 'scores':
+                    self.manager.transition.direction = 'right'
+                    self.manager.current = 'game'
+                case _:
+                    return False
+        return True  # Returning True will prevent the default behavior
 
     def on_grid_change(self, _, __):
         config.generate_sequence_spinner_values(int(self.grid_height_spinner.text), int(self.grid_width_spinner.text))

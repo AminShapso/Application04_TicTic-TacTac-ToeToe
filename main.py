@@ -37,8 +37,8 @@ elif set_window[0]:
 
 
 class TicTacToeApp(App):
+
     def build(self):
-        Window.bind(on_keyboard=self.on_key_down)
         self.title = "TicTic TacTac ToeToe"
         self.icon = 'assets/Icon 01.png'
         sm = ScreenManager()
@@ -47,16 +47,6 @@ class TicTacToeApp(App):
         sm.add_widget(ScoresScreen(name='scores'))
         return sm
 
-    def on_key_down(self, window, key, *args):
-        if key == 27:  # 27 is the keycode for the Android back button
-            GameScreen.back_to_menu(GameScreen(), None)
-            return True  # Returning True will prevent the default behavior
-        return False
-
 
 if __name__ == '__main__':
     TicTacToeApp().run()
-
-# Fix back button
-# make Bool visible (ghost checkbox)
-# make game_screen buttons font smaller

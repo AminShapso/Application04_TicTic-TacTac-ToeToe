@@ -1,6 +1,7 @@
 """This code is contributed by divyesh072019
 Python3 program to find the next optimal move for a player"""
 import copy
+import random
 
 new_method = False
 player, opponent = 1, 0
@@ -14,10 +15,11 @@ board = [
 
 
 def initilaize(grid_height, grid_width, row_sequence_in, column_sequence_in, diagonal_sequence_in):
+    global num_players
+    global move_counter
     global player, opponent
     global height, width
     global row_sequence, column_sequence, diagonal_sequence
-    global board
     height = grid_height
     width = grid_width
     row_sequence = row_sequence_in
@@ -34,78 +36,74 @@ def is_moves_left(board):
     return False
 
 
-def evaluate_old(b):
+def evaluate_old(board):
     """This is the evaluation function as discussed in the previous article (http://goo.gl/sJgv68)"""
     # Checking for Rows for X or O victory.
     for row in range(height):
-        if b[row][0] == b[row][1] and b[row][1] == b[row][2]:
-            if b[row][0] == player:
+        if board[row][0] == board[row][1] and board[row][1] == board[row][2]:
+            if board[row][0] == player:
                 return 10
-            elif b[row][0] == opponent:
+            elif board[row][0] == opponent:
                 return -10
 
     # Checking for Columns for X or O victory.
     for col in range(width):
-        if b[0][col] == b[1][col] and b[1][col] == b[2][col]:
-            if b[0][col] == player:
+        if board[0][col] == board[1][col] and board[1][col] == board[2][col]:
+            if board[0][col] == player:
                 return 10
-            elif b[0][col] == opponent:
+            elif board[0][col] == opponent:
                 return -10
 
     # Checking for Diagonals for X or O victory.
-    if b[0][0] == b[1][1] and b[1][1] == b[2][2]:
-        if b[0][0] == player:
+    if board[0][0] == board[1][1] and board[1][1] == board[2][2]:
+        if board[0][0] == player:
             return 10
-        elif b[0][0] == opponent:
+        elif board[0][0] == opponent:
             return -10
 
-    if b[0][2] == b[1][1] and b[1][1] == b[2][0]:
-        if b[0][2] == player:
+    if board[0][2] == board[1][1] and board[1][1] == board[2][0]:
+        if board[0][2] == player:
             return 10
-        elif b[0][2] == opponent:
+        elif board[0][2] == opponent:
             return -10
-
-    # Else if none of them have won then return 0
-    return 0
+    return 0  # Else if none of them have won then return 0
 
 
-def evaluate_new(b):
+def evaluate_new(board):
     """This is the evaluation function as discussed in the previous article (http://goo.gl/sJgv68)"""
     # Checking for Rows for X or O victory.
     for row in range(height):
         for c in range(width - row_sequence + 1):
-            if all([b[row][i + c] == player for i in range(row_sequence)]):
+            if all([board[row][i + c] == player for i in range(row_sequence)]):
                 return 10
-            elif all([b[row][i + c] == opponent for i in range(row_sequence)]):
+            elif all([board[row][i + c] == opponent for i in range(row_sequence)]):
                 return -10
 
     # Checking for Columns for X or O victory.
     for col in range(width):
         for r in range(height - column_sequence + 1):
-            if all([b[i + r][col] == player for i in range(column_sequence)]):
+            if all([board[i + r][col] == player for i in range(column_sequence)]):
                 return 10
-            elif all([b[i + r][col] == opponent for i in range(column_sequence)]):
+            elif all([board[i + r][col] == opponent for i in range(column_sequence)]):
                 return -10
 
     # Checking for Diagonals for X or O victory.
     for row, col in zip([0] * (height - 1) + list(range(width)), list(reversed(range(height))) + [0] * (width - 1)):
         for r, c in zip(range(row - diagonal_sequence + 1, row + 1), range(col - diagonal_sequence + 1, col + 1)):
             if 0 <= r <= (height - diagonal_sequence) and 0 <= c <= (width - diagonal_sequence):
-                if all([b[r + i][c + i] == player for i in range(diagonal_sequence)]):
+                if all([board[r + i][c + i] == player for i in range(diagonal_sequence)]):
                     return 10
-                elif all([b[r + i][c + i] == opponent for i in range(diagonal_sequence)]):
+                elif all([board[r + i][c + i] == opponent for i in range(diagonal_sequence)]):
                     return -10
     # Check backward diagonal:
     for row, col in zip(list(range(width)) + [width - 1] * (height - 1), [0] * (width - 1) + list(range(height))):
         for r, c in zip(reversed(range(row, row + diagonal_sequence)), range(col - diagonal_sequence + 1, col + 1)):
             if diagonal_sequence - 1 <= r <= height - 1 and 0 <= c <= (width - diagonal_sequence):
-                if all([b[r - i][c + i] == player for i in range(diagonal_sequence)]):
+                if all([board[r - i][c + i] == player for i in range(diagonal_sequence)]):
                     return 10
-                elif all([b[r - i][c + i] == opponent for i in range(diagonal_sequence)]):
+                elif all([board[r - i][c + i] == opponent for i in range(diagonal_sequence)]):
                     return -10
-
-    # Else if none of them have won then return 0
-    return 0
+    return 0  # Else if none of them have won then return 0
 
 
 def minimax(board, depth, is_max):
@@ -114,94 +112,45 @@ def minimax(board, depth, is_max):
         score = evaluate_new(board)
     else:
         score = evaluate_old(board)
-
-    # If Maximizer has won the game return his/her
-    # evaluated score
-    if score == 10:
+    if score == 10:  # If Maximizer has won the game return his/her evaluated score
         return score
-
-    # If Minimizer has won the game return his/her
-    # evaluated score
-    if score == -10:
+    if score == -10:  # If Minimizer has won the game return his/her evaluated score
         return score
-
-    # If there are no more moves and no winner then
-    # it is a tie
-    if not is_moves_left(board):
+    if not is_moves_left(board):  # If there are no more moves and no winner then it is a tie
         return 0
-
-    # If this maximizer's move
-    if is_max:
+    if is_max:  # If this maximizer's move
         best = -1000
-
-        # Traverse all cells
         for r in range(height):
             for c in range(width):
-
-                # Check if cell is empty
-                if board[r][c] is None:
-                    # Make the move
-                    board[r][c] = player
-
-                    # Call minimax recursively and choose
-                    # the maximum value
-                    best = max(best, minimax(board, depth + 1, not is_max))
-
-                    # Undo the move
-                    board[r][c] = None
+                if board[r][c] is None:  # Check if cell is empty
+                    board[r][c] = player  # Make the move
+                    best = max(best, minimax(board, depth + 1, not is_max))  # Call minimax recursively and choose the maximum value
+                    board[r][c] = None  # Undo the move
         return best
 
-    # If this minimizer's move
-    else:
+    else:  # If this minimizer's move
         best = 1000
-
-        # Traverse all cells
         for r in range(height):
             for c in range(width):
-
-                # Check if cell is empty
-                if board[r][c] is None:
-                    # Make the move
-                    board[r][c] = opponent
-
-                    # Call minimax recursively and choose
-                    # the minimum value
-                    best = min(best, minimax(board, depth + 1, not is_max))
-
-                    # Undo the move
-                    board[r][c] = None
-        return best
-    # This will return the best possible move for the player
+                if board[r][c] is None:  # Check if cell is empty
+                    board[r][c] = opponent  # Make the move
+                    best = min(best, minimax(board, depth + 1, not is_max))  # Call minimax recursively and choose the minimum value
+                    board[r][c] = None  # Undo the move
+        return best  # This will return the best possible move for the player
 
 
 def find_best_move(board):
-    print(f'{new_method = }')
     best_val = -1000
     best_move = (-1, -1)
 
-    # Traverse all cells, evaluate minimax function for
-    # all empty cells. And return the cell with optimal
-    # value.
+    # Traverse all cells, evaluate minimax function for all empty cells. And return the cell with optimal value
     for r in range(height):
         for c in range(width):
-
-            # Check if cell is empty
-            if board[r][c] is None:
-
-                # Make the move
-                board[r][c] = player
-
-                # compute evaluation function for this
-                # move.
-                move_val = minimax(board, 0, False)
-
-                # Undo the move
-                board[r][c] = None
-
-                # If the value of the current move is
-                # more than the best value, then update
-                # best/
-                if move_val > best_val:
+            if board[r][c] is None:  # Check if cell is empty
+                board[r][c] = player  # Make the move
+                move_val = minimax(board, 0, False)  # compute evaluation function for this move
+                board[r][c] = None  # Undo the move
+                if move_val > best_val:  # If the value of the current move is more than the best value, then update best
                     best_move = (r, c)
                     best_val = move_val
     return best_move

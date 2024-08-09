@@ -20,16 +20,16 @@ class TicTacToeGame(Widget):
         super().__init__(**kwargs)
         with self.canvas.before:
             Image(source='assets/Icon 02.png', pos=self.pos, size=Window.system_size, opacity=0.1)
-        self.grid_height = config.default_grid
-        self.grid_width = config.default_grid
-        self.row_sequence = config.default_grid
-        self.column_sequence = config.default_grid
-        self.diagonal_sequence = config.default_grid
+        self.grid_height = config.default_grid_height
+        self.grid_width = config.default_grid_width
+        self.row_sequence = config.default_sequence_row
+        self.column_sequence = config.default_sequence_column
+        self.diagonal_sequence = config.default_sequence_diagonal
         self.num_players = config.default_num_players
         self.max_num_players = len(config.num_players_spinner_values) + 1
         self.starting_player = 0
         self.current_player = self.starting_player
-        self.vs_ghost = False
+        self.vs_ghost = config.default_vs_ghost
         self.game_over = False
         self.move_counter = 0
         self.result_label = Label(text=f"Player {config.player_symbols[self.current_player]}'s turn", font_name=config.global_font, font_size=config.font_size_small, size_hint=(1, None), height=config.widget_height_pixels)
@@ -116,33 +116,36 @@ class TicTacToeGame(Widget):
 
     def make_ghost_move(self):
         if self.current_player == (self.num_players - 1) and self.vs_ghost:
-            if self.grid_height > 4 or self.grid_width > 4 or self.num_players > 2:
-                if self.ghost_move_functional():
-                    return None
-                if self.move_counter == 0:
-                    if self.ghost_move_corner():
-                        return None
-                if self.move_counter == 2 and self.board[int(self.grid_height / 2)][int(self.grid_width / 2)] is None:
-                    if self.ghost_move_corner():
-                        return None
-                if self.ghost_move_middle():
-                    return None
-                if self.ghost_move_corner():
-                    return None
-                if self.ghost_move_random():
-                    return None
-            else:
-                ghost_algorithm.initilaize(self.grid_height, self.grid_width, self.row_sequence, self.column_sequence, self.diagonal_sequence)
-                if self.grid_height == 3 and self.grid_width == 3 and self.row_sequence == 3 and self.column_sequence == 3 and self.diagonal_sequence == 3:
-                    ghost_algorithm.new_method = False
-                else:
-                    if self.move_counter < 8:
-                        if self.ghost_move_corner():
-                            return None
-                    ghost_algorithm.new_method = True
+            ghost_algorithm.initilaize(self.grid_height, self.grid_width, self.row_sequence, self.column_sequence, self.diagonal_sequence)
+            if self.grid_height == 3 and self.grid_width == 3 and self.row_sequence == 3 and self.column_sequence == 3 and self.diagonal_sequence == 3 and self.num_players == 2:
+                ghost_algorithm.new_method = False
+                print("find_best_move with OLD algorithm")
                 best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board))
                 self.on_touch_down(touch=(best_move[0], best_move[1]))
                 return None
+            else:
+                if self.move_counter < 8:
+                    print("ghost_move_functional")
+                    if self.ghost_move_functional():
+                        return None
+                    if self.move_counter == 0:
+                        if self.ghost_move_corner():
+                            return None
+                    if self.move_counter == 2 and self.board[int(self.grid_height / 2)][int(self.grid_width / 2)] is None:
+                        if self.ghost_move_corner():
+                            return None
+                    if self.ghost_move_middle():
+                        return None
+                    if self.ghost_move_corner():
+                        return None
+                    if self.ghost_move_random():
+                        return None
+                else:
+                    ghost_algorithm.new_method = True
+                    print("find_best_move with NEW algorithm")
+                    best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board))
+                    self.on_touch_down(touch=(best_move[0], best_move[1]))
+                    return None
 
     def ghost_move_functional(self):
         """Search for a winning or a losing move, and make the ghost take a move for it"""

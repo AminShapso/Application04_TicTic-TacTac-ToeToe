@@ -4,15 +4,20 @@ from kivy.utils import platform
 
 
 # GameScreen default values
+default_vs_ghost = True
 default_num_players = 2
-default_grid = 3
+default_grid_width = 4
+default_grid_height = 4
+default_sequence_row = 4
+default_sequence_column = 4
+default_sequence_diagonal = 4
 
 # WelcomeScreen spinner_values
 grid_width_spinner_values = [str(i) for i in range(3, 11)]
 grid_height_spinner_values = [str(i) for i in range(3, 11)]
-symbol_sequence_row_spinner_values = [str(i) for i in range(2, default_grid + 1)] + ['Off']
-symbol_sequence_column_spinner_values = [str(i) for i in range(2, default_grid + 1)] + ['Off']
-symbol_sequence_diagonal_spinner_values = [str(i) for i in range(2, default_grid + 1)] + ['Off']
+symbol_sequence_row_spinner_values = [str(i) for i in range(2, default_sequence_row + 1)] + ['Off']
+symbol_sequence_column_spinner_values = [str(i) for i in range(2, default_sequence_column + 1)] + ['Off']
+symbol_sequence_diagonal_spinner_values = [str(i) for i in range(2, min(default_sequence_row, default_sequence_column) + 1)] + ['Off']
 num_players_spinner_values = ['2', '3', '4', '5', '6']
 
 # Globals
@@ -23,7 +28,7 @@ if platform == "android":
     widget_height_pixels = 80
     widget_height_percentage = 1
     font_size_big = 80
-    font_size_small = "16sp"
+    font_size_small = "14sp"
     # widget_height_pixels = 180
     # widget_height_percentage = 0.1
     # font_size_big = 200
