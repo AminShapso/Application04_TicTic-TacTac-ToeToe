@@ -106,8 +106,10 @@ def evaluate_new(board):
     return 0  # Else if none of them have won then return 0
 
 
-def minimax(board, depth, is_max):
+def minimax(board, depth, is_max, max_depth):
     """This is the minimax function. It considers all the possible ways the game can go and returns the value of the board"""
+    if max_depth is not None and depth > max_depth:
+        return 0
     if new_method:
         score = evaluate_new(board)
     else:
@@ -124,7 +126,7 @@ def minimax(board, depth, is_max):
             for c in range(width):
                 if board[r][c] is None:  # Check if cell is empty
                     board[r][c] = player  # Make the move
-                    best = max(best, minimax(board, depth + 1, not is_max))  # Call minimax recursively and choose the maximum value
+                    best = max(best, minimax(board, depth + 1, not is_max, max_depth))  # Call minimax recursively and choose the maximum value
                     board[r][c] = None  # Undo the move
         return best
 
@@ -134,12 +136,12 @@ def minimax(board, depth, is_max):
             for c in range(width):
                 if board[r][c] is None:  # Check if cell is empty
                     board[r][c] = opponent  # Make the move
-                    best = min(best, minimax(board, depth + 1, not is_max))  # Call minimax recursively and choose the minimum value
+                    best = min(best, minimax(board, depth + 1, not is_max, max_depth))  # Call minimax recursively and choose the minimum value
                     board[r][c] = None  # Undo the move
         return best  # This will return the best possible move for the player
 
 
-def find_best_move(board):
+def find_best_move(board, max_depth=None):
     best_val = -1000
     best_move = (-1, -1)
 
@@ -148,7 +150,7 @@ def find_best_move(board):
         for c in range(width):
             if board[r][c] is None:  # Check if cell is empty
                 board[r][c] = player  # Make the move
-                move_val = minimax(board, 0, False)  # compute evaluation function for this move
+                move_val = minimax(board, 0, False, max_depth)  # compute evaluation function for this move
                 board[r][c] = None  # Undo the move
                 if move_val > best_val:  # If the value of the current move is more than the best value, then update best
                     best_move = (r, c)
