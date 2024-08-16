@@ -51,5 +51,6 @@ class TicTacToeApp(App):
 if __name__ == '__main__':
     TicTacToeApp().run()
 
-# X is disapearing
-# depth is too high in the mid-range
+# depth is too high in the mid-range for bigger grids
+# sequence is wrong after grid change
+# winner line after grid change

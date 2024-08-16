@@ -4,13 +4,13 @@ from kivy.utils import platform
 
 
 # GameScreen default values
-default_vs_ghost = True
+default_vs_ghost = False
 default_num_players = 2
-default_grid_width = 4
-default_grid_height = 4
-default_sequence_row = 4
-default_sequence_column = 4
-default_sequence_diagonal = 4
+default_grid_width = 3
+default_grid_height = 3
+default_sequence_row = 3
+default_sequence_column = 3
+default_sequence_diagonal = 3
 
 # WelcomeScreen spinner_values
 grid_width_spinner_values = [str(i) for i in range(3, 11)]

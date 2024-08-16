@@ -152,7 +152,9 @@ def find_best_move(board, max_depth=None):
                 board[r][c] = player  # Make the move
                 move_val = minimax(board, 0, False, max_depth)  # compute evaluation function for this move
                 board[r][c] = None  # Undo the move
-                if move_val > best_val:  # If the value of the current move is more than the best value, then update best
+                if new_method and move_val == 0:
+                    best_move = (-1, -1)
+                elif move_val > best_val:  # If the value of the current move is more than the best value, then update best
                     best_move = (r, c)
                     best_val = move_val
     return best_move

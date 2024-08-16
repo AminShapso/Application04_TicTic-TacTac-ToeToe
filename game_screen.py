@@ -54,7 +54,6 @@ class TicTacToeGame(Widget):
         self.move_counter = 0
         self.winning_sequence = []
         self.update_turn_label()
-        self.canvas.clear()
         self.draw_grid()
         self.make_ghost_move()
 
@@ -64,17 +63,15 @@ class TicTacToeGame(Widget):
         cell_width = self.width / self.grid_width
         with self.canvas:
             Color(1, 1, 1, 1)  # White color for grid lines
-            for i in range(1, self.grid_height):
-                # Horizontal lines
+            for i in range(1, self.grid_height):    # Horizontal lines
                 Line(points=[0, i * cell_height, self.width, i * cell_height], width=1)
-            for i in range(1, self.grid_width):
-                # Vertical lines
+            for i in range(1, self.grid_width):     # Vertical lines
                 Line(points=[i * cell_width, 0, i * cell_width, self.height], width=1)
 
         # Redraw existing symbols
         for row in range(self.grid_height):
             for col in range(self.grid_width):
-                if self.board[row][col]:
+                if self.board[row][col] is not None:
                     self.draw_symbol(row, col, self.board[row][col])
 
     def on_touch_down(self, touch):
@@ -119,33 +116,25 @@ class TicTacToeGame(Widget):
             ghost_algorithm.initilaize(self.grid_height, self.grid_width, self.row_sequence, self.column_sequence, self.diagonal_sequence)
             if self.grid_height == 3 and self.grid_width == 3 and self.row_sequence == 3 and self.column_sequence == 3 and self.diagonal_sequence == 3 and self.num_players == 2:
                 ghost_algorithm.new_method = False
-                print("find_best_move with OLD algorithm")
                 best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board), max_depth=None)
                 self.on_touch_down(touch=(best_move[0], best_move[1]))
                 return None
             else:
-                # if self.move_counter < 3:
-                #     print("ghost_move_functional")
-                #     if self.ghost_move_functional():
-                #         return None
-                #     if self.move_counter == 0:
-                #         if self.ghost_move_corner():
-                #             return None
-                #     if self.move_counter == 2 and self.board[int(self.grid_height / 2)][int(self.grid_width / 2)] is None:
-                #         if self.ghost_move_corner():
-                #             return None
-                #     if self.ghost_move_middle():
-                #         return None
-                #     if self.ghost_move_corner():
-                #         return None
-                #     if self.ghost_move_random():
-                #         return None
-                # else:
                 ghost_algorithm.new_method = True
-                max_depth = int((self.grid_height * self.grid_width - self.move_counter) / -2 + 10)
+                max_depth = int(self.move_counter / (self.grid_height * self.grid_width) * 10)
                 print(f'find_best_move with NEW algorithm... {max_depth = }')
                 best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board), max_depth=max_depth)
-                self.on_touch_down(touch=(best_move[0], best_move[1]))
+                if best_move != (-1, -1):
+                    self.on_touch_down(touch=(best_move[0], best_move[1]))
+                else:
+                    if self.ghost_move_functional():
+                        return None
+                    if self.ghost_move_corner():
+                        return None
+                    if self.ghost_move_middle():
+                        return None
+                    if self.ghost_move_random():
+                        return None
                 return None
 
     def ghost_move_functional(self):
@@ -239,14 +228,16 @@ class TicTacToeGame(Widget):
                 case _:
                     self.draw_player_06(row, col, cell_height, cell_width)      # symbol = *
 
-
     @staticmethod
     def draw_player_01(row, col, cell_height, cell_width, pading=0.2, thickness=5):   # symbol = X
         Line(points=[col * cell_width + cell_width * pading, row * cell_height + cell_height * pading,
                      (col + 1) * cell_width - cell_width * pading, (row + 1) * cell_height - cell_height * pading], width=thickness)
         Line(points=[(col + 1) * cell_width - cell_width * pading, row * cell_height + cell_height * pading,
                      col * cell_width + cell_width * pading, (row + 1) * cell_height - cell_height * pading], width=thickness)
-
+        # Line(points=[col * cell_width + cell_width * 0.5, row * cell_height + cell_height * (1 - pading),
+        #              col * cell_width + cell_width * (1 - pading), row * cell_height + cell_height * pading,
+        #              col * cell_width + cell_width * pading, row * cell_height + cell_height * pading,
+        #              col * cell_width + cell_width * 0.5, row * cell_height + cell_height * (1 - pading)], width=thickness)
 
     @staticmethod
     def draw_player_02(row, col, cell_height, cell_width, pading=0.2, thickness=5):  # symbol = O
