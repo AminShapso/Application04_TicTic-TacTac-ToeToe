@@ -9,14 +9,16 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.spinner import Spinner
 from kivy.uix.checkbox import CheckBox
 
+canvas_image = None
+
 
 class WelcomeScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        with self.canvas.before:
-            Image(source='assets/Icon 02.png', pos=self.pos, size=Window.system_size, opacity=0.5)
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
         Window.bind(on_keyboard=self.on_key_down)
+        Window.bind(size=self.print_canvas)
+        self.print_canvas()
 
         # Number of players layout
         layout.add_widget(Label(text='Number of Players:', font_size=config.font_size_small, size_hint=(1, config.widget_height_percentage), height=config.widget_height_pixels))
@@ -72,6 +74,14 @@ class WelcomeScreen(Screen):
         # Add all widgets to the layout
         self.add_widget(layout)
 
+    def print_canvas(self, *_):
+        global canvas_image
+        if canvas_image is not None:
+            canvas_image.source = ''
+            canvas_image.opacity = 0
+        with self.canvas.before:
+            canvas_image = Image(source='assets/Icon 02.png', size=Window.system_size, opacity=0.25)
+
     def on_key_down(self, window, key, *args):
         if key == 27 or key == 113:  # 27 is the keycode for the Android back button; 113 is for Windows key "q"
             match self.manager.current:
@@ -93,7 +103,6 @@ class WelcomeScreen(Screen):
 
     def start_game(self, _):
         game_screen = self.manager.get_screen('game')
-
         grid_height = int(self.grid_height_spinner.text)
         grid_width = int(self.grid_width_spinner.text)
         num_players = int(self.num_players_spinner.text)

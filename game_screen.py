@@ -18,8 +18,7 @@ from kivy.core.audio import SoundLoader
 class TicTacToeGame(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        with self.canvas.before:
-            Image(source='assets/Icon 02.png', pos=self.pos, size=Window.system_size, opacity=0.1)
+
         self.grid_height = config.default_grid_height
         self.grid_width = config.default_grid_width
         self.row_sequence = config.default_sequence_row
@@ -58,6 +57,9 @@ class TicTacToeGame(Widget):
         self.make_ghost_move()
 
     def draw_grid(self, *_):
+        self.canvas.before.clear()
+        with self.canvas.before:
+            Image(source='assets/Icon 02.png', pos=self.pos, size=Window.system_size, opacity=0.1)
         self.canvas.clear()
         cell_height = self.height / self.grid_height
         cell_width = self.width / self.grid_width
@@ -73,6 +75,10 @@ class TicTacToeGame(Widget):
             for col in range(self.grid_width):
                 if self.board[row][col] is not None:
                     self.draw_symbol(row, col, self.board[row][col])
+
+        # Redraw winning line
+        if self.winning_sequence:
+            self.draw_winning_line()
 
     def on_touch_down(self, touch):
         if not self.game_over:
@@ -112,18 +118,24 @@ class TicTacToeGame(Widget):
             self.parent.parent.reset_game(None)
 
     def make_ghost_move(self):
+        # Check if Ghost is enabled and it is "its" turn
         if self.current_player == (self.num_players - 1) and self.vs_ghost:
             ghost_algorithm.initilaize(self.grid_height, self.grid_width, self.row_sequence, self.column_sequence, self.diagonal_sequence)
             if self.grid_height == 3 and self.grid_width == 3 and self.row_sequence == 3 and self.column_sequence == 3 and self.diagonal_sequence == 3 and self.num_players == 2:
+                # Go to "ghost_algorithm.py" and run the old method
                 ghost_algorithm.new_method = False
                 best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board), max_depth=None)
                 self.on_touch_down(touch=(best_move[0], best_move[1]))
                 return None
             else:
-                ghost_algorithm.new_method = True
-                max_depth = int(self.move_counter / (self.grid_height * self.grid_width) * 10)
-                print(f'find_best_move with NEW algorithm... {max_depth = }')
-                best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board), max_depth=max_depth)
+                if self.num_players == 2:
+                    # Go to "ghost_algorithm.py" and run the new method
+                    ghost_algorithm.new_method = True
+                    max_depth = int(self.move_counter / (self.grid_height * self.grid_width) * 10)
+                    best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board), max_depth=max_depth)
+                else:
+                    # if the number of player is bigger than 2, Ghost will not be used
+                    best_move = (-1, -1)
                 if best_move != (-1, -1):
                     self.on_touch_down(touch=(best_move[0], best_move[1]))
                 else:
@@ -138,6 +150,7 @@ class TicTacToeGame(Widget):
                 return None
 
     def ghost_move_functional(self):
+        print('sdfgfdg')
         """Search for a winning or a losing move, and make the ghost take a move for it"""
         for row in range(self.grid_height):
             for col in range(self.grid_width):
@@ -234,10 +247,6 @@ class TicTacToeGame(Widget):
                      (col + 1) * cell_width - cell_width * pading, (row + 1) * cell_height - cell_height * pading], width=thickness)
         Line(points=[(col + 1) * cell_width - cell_width * pading, row * cell_height + cell_height * pading,
                      col * cell_width + cell_width * pading, (row + 1) * cell_height - cell_height * pading], width=thickness)
-        # Line(points=[col * cell_width + cell_width * 0.5, row * cell_height + cell_height * (1 - pading),
-        #              col * cell_width + cell_width * (1 - pading), row * cell_height + cell_height * pading,
-        #              col * cell_width + cell_width * pading, row * cell_height + cell_height * pading,
-        #              col * cell_width + cell_width * 0.5, row * cell_height + cell_height * (1 - pading)], width=thickness)
 
     @staticmethod
     def draw_player_02(row, col, cell_height, cell_width, pading=0.2, thickness=5):  # symbol = O
