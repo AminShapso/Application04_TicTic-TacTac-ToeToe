@@ -12,6 +12,11 @@ default_sequence_row = 3
 default_sequence_column = 3
 default_sequence_diagonal = 3
 
+# GameScreen max values
+max_sequence_row = 3
+max_sequence_column = 3
+max_sequence_diagonal = 3
+
 # WelcomeScreen spinner_values
 grid_width_spinner_values = [str(i) for i in range(3, 11)]
 grid_height_spinner_values = [str(i) for i in range(3, 11)]
@@ -57,9 +62,11 @@ def generate_random_colors():
 
 
 def generate_sequence_spinner_values(grid_height, grid_width):
-    global symbol_sequence_row_spinner_values
-    global symbol_sequence_column_spinner_values
-    global symbol_sequence_diagonal_spinner_values
-    symbol_sequence_row_spinner_values = [str(i) for i in range(2, grid_width + 1)] + ['Off']
-    symbol_sequence_column_spinner_values = [str(i) for i in range(2, grid_height + 1)] + ['Off']
-    symbol_sequence_diagonal_spinner_values = [str(i) for i in range(2, min(grid_height, grid_width) + 1)] + ['Off']
+    global symbol_sequence_row_spinner_values, symbol_sequence_column_spinner_values, symbol_sequence_diagonal_spinner_values
+    global max_sequence_row, max_sequence_column, max_sequence_diagonal
+    max_sequence_row = grid_width
+    max_sequence_column = grid_height
+    max_sequence_diagonal = min(grid_height, grid_width)
+    symbol_sequence_row_spinner_values = [str(i) for i in range(2, max_sequence_row + 1)] + ['Off']
+    symbol_sequence_column_spinner_values = [str(i) for i in range(2, max_sequence_column + 1)] + ['Off']
+    symbol_sequence_diagonal_spinner_values = [str(i) for i in range(2, max_sequence_diagonal + 1)] + ['Off']

@@ -100,6 +100,12 @@ class WelcomeScreen(Screen):
         self.symbol_sequence_row_spinner.values = config.symbol_sequence_row_spinner_values
         self.symbol_sequence_column_spinner.values = config.symbol_sequence_column_spinner_values
         self.symbol_sequence_diagonal_spinner.values = config.symbol_sequence_diagonal_spinner_values
+        if self.symbol_sequence_row_spinner.text.isdigit() and int(self.symbol_sequence_row_spinner.text) > config.max_sequence_row:
+            self.symbol_sequence_row_spinner.text = str(config.max_sequence_row)
+        if self.symbol_sequence_column_spinner.text.isdigit() and int(self.symbol_sequence_column_spinner.text) > config.max_sequence_column:
+            self.symbol_sequence_column_spinner.text = str(config.max_sequence_column)
+        if self.symbol_sequence_diagonal_spinner.text.isdigit() and int(self.symbol_sequence_diagonal_spinner.text) > config.max_sequence_diagonal:
+            self.symbol_sequence_diagonal_spinner.text = str(config.max_sequence_diagonal)
 
     def start_game(self, _):
         game_screen = self.manager.get_screen('game')
