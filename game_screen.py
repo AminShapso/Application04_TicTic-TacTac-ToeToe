@@ -223,7 +223,7 @@ class TicTacToeGame(Widget):
         cell_height = self.height / self.grid_height
         cell_width = self.width / self.grid_width
         pading = 0.2                # max = 0.5, i.e. half of a cell
-        pading_symbol_6 = 0.475     # only for self.draw_player_06
+        pading_symbol_6 = 0.275     # only for self.draw_player_06
         thickness = 5
         with self.canvas:
             r, g, b = self.colors[player]
