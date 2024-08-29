@@ -80,7 +80,7 @@ class TicTacToeGame(Widget):
         if self.winning_sequence:
             self.draw_winning_line()
 
-    def on_touch_down(self, touch):
+    def on_touch_up(self, touch):
         if not self.game_over:
             if self.current_player == (self.num_players - 1) and self.vs_ghost:
                 # time.sleep(1)
@@ -127,7 +127,7 @@ class TicTacToeGame(Widget):
                     # Go to "ghost_algorithm.py" and run the old method
                     ghost_algorithm.new_method = False
                     best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board), max_depth=None)
-                    self.on_touch_down(touch=(best_move[0], best_move[1]))
+                    self.on_touch_up(touch=(best_move[0], best_move[1]))
                     return None
                 elif self.grid_height <= 4 and self.grid_width <= 4:
                     # Go to "ghost_algorithm.py" and run the new method
@@ -135,7 +135,7 @@ class TicTacToeGame(Widget):
                     max_depth = int(self.move_counter / (self.grid_height * self.grid_width) * 10)
                     best_move = ghost_algorithm.find_best_move(copy.deepcopy(self.board), max_depth=max_depth)
             if best_move != (-1, -1):
-                self.on_touch_down(touch=(best_move[0], best_move[1]))
+                self.on_touch_up(touch=(best_move[0], best_move[1]))
                 return None
             else:
                 if self.ghost_move_functional():
@@ -157,8 +157,9 @@ class TicTacToeGame(Widget):
                     if row is not None and col is not None and self.board[row][col] is None:
                         self.board[row][col] = symbol
                         if self.check_winner(row, col, symbol):
+                            self.winning_sequence = []
                             self.board = copy.deepcopy(board_copy)
-                            self.on_touch_down(touch=(row, col))
+                            self.on_touch_up(touch=(row, col))
                             return True
                     self.board = copy.deepcopy(board_copy)
         return False
@@ -169,7 +170,7 @@ class TicTacToeGame(Widget):
         random.shuffle(list_grid_corners)
         for row, col in list_grid_corners:
             if row is not None and col is not None and self.board[row][col] is None:
-                self.on_touch_down(touch=(row, col))
+                self.on_touch_up(touch=(row, col))
                 return True
         return False
 
@@ -185,7 +186,7 @@ class TicTacToeGame(Widget):
         random.shuffle(list_center_positions)
         for row, col in list_center_positions:
             if row is not None and col is not None and self.board[row][col] is None:
-                self.on_touch_down(touch=(row, col))
+                self.on_touch_up(touch=(row, col))
                 return True
         return False
 
@@ -195,7 +196,7 @@ class TicTacToeGame(Widget):
         random.shuffle(list_all_positions)
         for row, col in list_all_positions:
             if row is not None and col is not None and self.board[row][col] is None:
-                self.on_touch_down(touch=(row, col))
+                self.on_touch_up(touch=(row, col))
                 return True
         return False
 
