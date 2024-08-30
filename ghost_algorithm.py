@@ -1,8 +1,3 @@
-"""This code is contributed by divyesh072019
-Python3 program to find the next optimal move for a player"""
-import copy
-import random
-
 new_method = False
 player, opponent = 1, 0
 height, width = 3, 3
@@ -37,35 +32,31 @@ def is_moves_left(board):
 
 
 def evaluate_old(board):
-    """This is the evaluation function as discussed in the previous article (http://goo.gl/sJgv68)"""
+    """This is the evaluation function"""
     # Checking for Rows for X or O victory.
     for row in range(height):
-        if board[row][0] == board[row][1] and board[row][1] == board[row][2]:
-            if board[row][0] == player:
-                return 10
-            elif board[row][0] == opponent:
-                return -10
+        if all([board[row][i] == player for i in range(3)]):
+            return 10
+        if all([board[row][i] == opponent for i in range(3)]):
+            return -10
 
     # Checking for Columns for X or O victory.
     for col in range(width):
-        if board[0][col] == board[1][col] and board[1][col] == board[2][col]:
-            if board[0][col] == player:
-                return 10
-            elif board[0][col] == opponent:
-                return -10
+        if all([board[i][col] == player for i in range(3)]):
+            return 10
+        if all([board[i][col] == opponent for i in range(3)]):
+            return -10
 
     # Checking for Diagonals for X or O victory.
-    if board[0][0] == board[1][1] and board[1][1] == board[2][2]:
-        if board[0][0] == player:
-            return 10
-        elif board[0][0] == opponent:
-            return -10
+    if all([board[i][i] == player for i in range(3)]):
+        return 10
+    if all([board[i][i] == opponent for i in range(3)]):
+        return -10
 
-    if board[0][2] == board[1][1] and board[1][1] == board[2][0]:
-        if board[0][2] == player:
-            return 10
-        elif board[0][2] == opponent:
-            return -10
+    if all([board[i][j] == player for i, j in zip(range(3), reversed(range(3)))]):
+        return 10
+    if all([board[i][j] == opponent for i, j in zip(range(3), reversed(range(3)))]):
+        return -10
     return 0  # Else if none of them have won then return 0
 
 
@@ -106,7 +97,7 @@ def evaluate_new(board):
     return 0  # Else if none of them have won then return 0
 
 
-def minimax(board, depth, is_max, max_depth):
+def minimax(board, depth, maximizing_player, max_depth):
     """This is the minimax function. It considers all the possible ways the game can go and returns the value of the board"""
     if max_depth is not None and depth > max_depth:
         return 0
@@ -120,13 +111,13 @@ def minimax(board, depth, is_max, max_depth):
         return score
     if not is_moves_left(board):  # If there are no more moves and no winner then it is a tie
         return 0
-    if is_max:  # If this maximizer's move
+    if maximizing_player:
         best = -1000
         for r in range(height):
             for c in range(width):
-                if board[r][c] is None:  # Check if cell is empty
-                    board[r][c] = player  # Make the move
-                    best = max(best, minimax(board, depth + 1, not is_max, max_depth))  # Call minimax recursively and choose the maximum value
+                if board[r][c] is None:
+                    board[r][c] = player
+                    best = max(best, minimax(board, depth + 1, not maximizing_player, max_depth))  # Call minimax recursively and choose the maximum value
                     board[r][c] = None  # Undo the move
         return best
 
@@ -134,11 +125,11 @@ def minimax(board, depth, is_max, max_depth):
         best = 1000
         for r in range(height):
             for c in range(width):
-                if board[r][c] is None:  # Check if cell is empty
-                    board[r][c] = opponent  # Make the move
-                    best = min(best, minimax(board, depth + 1, not is_max, max_depth))  # Call minimax recursively and choose the minimum value
+                if board[r][c] is None:
+                    board[r][c] = opponent
+                    best = min(best, minimax(board, depth + 1, not maximizing_player, max_depth))  # Call minimax recursively and choose the minimum value
                     board[r][c] = None  # Undo the move
-        return best  # This will return the best possible move for the player
+        return best
 
 
 def find_best_move(board, max_depth=None):
