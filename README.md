@@ -9,6 +9,7 @@ This app is a cross-platform Tic-Tac-Toe game, which was originally developed in
 * The number of symbols in sequence for a win can be also adjusted (or turned off).
 
 
+
 ## For future development
 
 * Add animations.
@@ -40,6 +41,7 @@ This app is a cross-platform Tic-Tac-Toe game, which was originally developed in
 * pywin32==306
 * requests==2.32.3
 * urllib3==2.2.2
+
 
 
 ## Usage
