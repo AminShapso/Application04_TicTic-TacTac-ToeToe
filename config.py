@@ -43,7 +43,7 @@ else:
     widget_height_percentage = None
     font_size_big = 50
     font_size_small = 20
-player_symbols = ['X', 'O', '□', 'Δ', '◊', 'ж']
+player_symbols = ['X', 'O', '□', 'Δ', '◊', '#']
 list_of_colors = None
 player_sounds = [f'assets/Audio - Player Sound {i:02}.wav' for i in range(1, 14)]
 result_sounds = {'win': 'assets/Audio - Game won.wav', 'tie': 'assets/Audio - Game tie.wav'}
