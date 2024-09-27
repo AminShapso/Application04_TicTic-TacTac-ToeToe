@@ -116,7 +116,7 @@ See this tutorial for more help:
 ## Demo
 
 
-<img src="assets git/demo.gif" width="360" alt="App Demo">
+<img src="https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/blob/main/assets%20git/demo.gif?raw=true" width="360" alt="App Demo">
 
 
 <br/>
