@@ -1,6 +1,6 @@
 <!--- Icon image with a summary of the app  -->
 
-# <img src="assets git/icon.png" width="24" alt="App Icon"> TicTic-TacTac-ToeToe with KivyMD
+# <img src="https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/blob/main/assets%20git/icon.png?raw=true" width="24" alt="App Icon"> TicTic-TacTac-ToeToe with KivyMD
 
 This app is a cross-platform Tic-Tac-Toe game, which was originally developed in Tkinter but now has been converted to Kivy for Android support.
 
@@ -48,7 +48,7 @@ See this tutorial for more help:
 
 ## Game Instructions
 
-<img src="Screenshots/Tutorial/02 Main Menu Screen with annotations.jpg" width="360" align="left" alt="Main Menu with annotations">
+<img src="https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/blob/main/Screenshots/Tutorial/02%20Main%20Menu%20Screen%20with%20annotations.jpg?raw=true" width="360" align="left" alt="Main Menu with annotations">
 
 <br/>
 
@@ -76,7 +76,7 @@ See this tutorial for more help:
 
 <!--- Game Instructions - Game screen  -->
 
-<img src="Screenshots/Tutorial/03 Game Screen.jpg" width="360" align="left" alt="Game Screen">
+<img src="https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/blob/main/Screenshots/Tutorial/03%20Game%20Screen.jpg?raw=true" width="360" align="left" alt="Game Screen">
 
 <br/><br/>
 
@@ -101,8 +101,8 @@ See this tutorial for more help:
 
 #### An example of a game of 3 players, with a grid of 6x4, with only the diagonal sequence enabled:
 
-<img src="Screenshots/Tutorial/04 Game Example - Settings.jpg" width="360" align="left" alt="Game Screen">
-<img src="Screenshots/Tutorial/05 Game Example - In game.jpg" width="360" align="left" alt="Game Screen">
+<img src="https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/blob/main/Screenshots/Tutorial/04%20Game%20Example%20-%20Settings.jpg?raw=true" width="360" align="left" alt="Game Screen">
+<img src="https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/blob/main/Screenshots/Tutorial/05%20Game%20Example%20-%20In%20game.jpg?raw=true" width="360" align="left" alt="Game Screen">
 
 
 
