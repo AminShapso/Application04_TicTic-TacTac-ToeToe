@@ -19,7 +19,7 @@ This app is a cross-platform Tic-Tac-Toe game, which was originally developed in
 
 ## Installation Instructions
 
-Go to my [releases in this repo](https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/releases) and download the latest .apk from there.  
+Go to my [releases tab in this repo](https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/releases) and download the latest .apk from there.  
 OR  
 Download from the direct link from [here](https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/releases/latest/download/TicTacToe-1.0-arm64-v8a_armeabi-v7a-debug.apk)
   
@@ -28,25 +28,27 @@ See this tutorial for more help:
 [https://www.androidauthority.com/how-to-install-apks-31494/](https://www.androidauthority.com/how-to-install-apks-31494/)
 
 <br/>
+<div dir="rtl">
 
-## Installation Instructions (Hebrew) הוראות הורדה
-לכו ל [אתר הזה](https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/releases) ותלחצו על הקובץ .apk  
-או (הדרך הפשוט יותר)  
+## הוראות הורדה Installation Instructions (Hebrew) 
+
+לכו אל [אתר זה](https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/releases) ותלחצו על הקובץ .apk   
+או (הדרך הפשוטה יותר)  
 לכו ל[קישור](https://github.com/AminShapso/Application04_TicTic-TacTac-ToeToe/releases/latest/download/TicTacToe-1.0-arm64-v8a_armeabi-v7a-debug.apk) הזה שאוטומטית יתחיל את ההורדה  
 
 יכול להיות שתצטרכו להדליק "יישומים לא מוכרים" בהגדרות.
 #### הסבר על התהליך הזה: 
 תיכנסו להגדרות המכשיר > אבטחה > וסמנו את Unknown sources (יישומים לא מוכרים) בדפדפן שלכם, אשרו את התיבה שנפתחת ואז תפתחו את הקובץ.
 
+</div>
 <br/>
-
 
 
 <!--- Game Instructions - Main menu  -->
 
 ## Game Instructions
 
-<img src="Screenshots/Tutorial/02 Main Menu with annotations.jpg" width="360" align="left" alt="Main Menu with annotations">
+<img src="Screenshots/Tutorial/02 Main Menu Screen with annotations.jpg" width="360" align="left" alt="Main Menu with annotations">
 
 <br/>
 
@@ -68,7 +70,7 @@ See this tutorial for more help:
 5. Start Game:  
    Click here to start the game.
 
-<br/><br/>
+<br/><br/><br/><br/><br/><br/><br/>
 
 
 
@@ -76,7 +78,7 @@ See this tutorial for more help:
 
 <img src="Screenshots/Tutorial/03 Game Screen.jpg" width="360" align="left" alt="Game Screen">
 
-<br/><br>
+<br/><br/>
 
 1. Back to Menu:  
    Exit the game and go back to the main menu (game status and scores are not saved).
@@ -91,20 +93,20 @@ See this tutorial for more help:
    See the current scores.  
    Scores are reset when you exit back to the main menu.
 
-<br/><br/><br/><br><br/><br><br>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 
 
 <!--- Game Instructions - Game example  -->
 
-An example of a game of 3 players, with a grid of 6x4, with only the diagonal sequence enabled:
+#### An example of a game of 3 players, with a grid of 6x4, with only the diagonal sequence enabled:
 
 <img src="Screenshots/Tutorial/04 Game Example - Settings.jpg" width="360" align="left" alt="Game Screen">
 <img src="Screenshots/Tutorial/05 Game Example - In game.jpg" width="360" align="left" alt="Game Screen">
 
 
 
-<br/><br/><br/><br/><br/><br><br/><br/><br/><br/><br/><br><br/><br/><br/><br/><br/><br><br/><br/><br>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br><br/><br/><br/><br/><br/><br><br/><br/><br>
 
 
 
@@ -112,6 +114,7 @@ An example of a game of 3 players, with a grid of 6x4, with only the diagonal se
 
 
 ## Demo
+
 
 <img src="assets git/demo.gif" width="360" alt="App Demo">
 
