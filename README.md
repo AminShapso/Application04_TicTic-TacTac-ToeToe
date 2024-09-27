@@ -70,7 +70,7 @@ See this tutorial for more help:
 5. Start Game:  
    Click here to start the game.
 
-<br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/>
 
 
 
@@ -93,7 +93,7 @@ See this tutorial for more help:
    See the current scores.  
    Scores are reset when you exit back to the main menu.
 
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/>
 
 
 
@@ -106,7 +106,7 @@ See this tutorial for more help:
 
 
 
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br><br/><br/><br/><br/><br/><br><br/><br/><br>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br><br/><br/><br/><br/><br/><br><br/><br/>
 
 
 
